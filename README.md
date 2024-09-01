@@ -4,15 +4,6 @@ Here we provide the code to reproduce the results of the paper:</br>
 "[Investigating representational relationships across visual cortex using relational neural control][paper_link]".</br>
 Alessandro T. Gifford, Maya A. Jastrzębowska, Johannes J.D. Singer, Radoslaw M. Cichy
 
-!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-
-Here we provide the code to reproduce the results of the paper:
-
-"[Investigating representational relationships across visual cortex using relational neural control][paper_link]".
-
-Alessandro T. Gifford, Maya A. Jastrzębowska, Johannes J.D. Singer, Radoslaw M. Cichy
-
-!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
 
 ## 📖 Theoretical motivation
