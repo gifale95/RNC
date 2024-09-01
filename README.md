@@ -27,12 +27,15 @@ We created interactive tutorials where you can lear how to use univariate and an
 
 
 
-## 📦 Code description !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+## 📦 Code description
 
-!!! Say that folders are numbered as main paper figures !!!
-!!! Briefly describe every code file !!!
-
-* **01_???:** ??? description ???.
+* **00_synthesize_fmri_responses:** Generate _in-silico_ fMRI responses for naturalistic images, using trained encoding models from the Neural Encoding Dataset.
+* **01_in_silico_fmri_encoding_accuracy:** Compute the encoding accuracy and perform a noise analysis of the _in-silico_ fMRI responses.
+* **02_univariate_rnc:** Apply univariate RNC on the _in-silico_ fMRI responses.
+* **03_generative_univariate_rnc:** Apply generative univariate RNC on  _in-silico_ fMRI responses.
+* **04_multivariate_rnc:** Apply multivariate RNC on the _in-silico_ fMRI responses.
+* **05_multivariate_rnc_retinotopy:** Perform the retinotopy analysis on the _in-silico_ fMRI resposnes for the V1 vs. V4 multivariate RNC controlling images.
+* **06_in_vivo_validation:** Analyze the _in-vivo_ fMRI responses for the V1 vs. V4 univariate and multivariate RNC controlling images.
 
 
 
@@ -62,7 +65,6 @@ If you experience problems with the code, please submit an issue!
 If you use any of our data or code, please cite the papers:
 
 > * *Gifford AT, Jastrzębowska M, Singer JJD, Cichy RM. 2023.Investigating representational relationships across visual cortex using relational neural control. _bioRxiv_, ???. DOI: [???][paper_link]*
-
 > * *Gifford AT, Cichy RM. 2024. The Neural Encoding Dataset. In preparation. https://github.com/gifale95/NED*
 
 
