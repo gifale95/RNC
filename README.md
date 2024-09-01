@@ -1,53 +1,91 @@
-# Disentangling the unique contribution of human retinotopic regions using neural control
+# Investigating representational relationships across visual cortex using relational neural control
 
-Here we provide the code to reproduce the results of our data resource paper:</br>
-"[Disentangling the unique contribution of human retinotopic regions using neural control][paper_link]".</br> --> Edit paper title !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-Alessandro T. Gifford, Johannes J.D. Singer, Maya Jastrzebowska, Radoslaw M. Cichy
+Here we provide the code to reproduce the results of the paper:</br>
+"[Investigating representational relationships across visual cortex using relational neural control][paper_link]".</br>
+Alessandro T. Gifford, Maya A. Jastrzębowska, Johannes J.D. Singer, Radoslaw M. Cichy
 
-If you experience problems with the code, please create a pull request or report the bug directly to Ale via email (alessandro.gifford@gmail.com).
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
+Here we provide the code to reproduce the results of the paper:
 
+"[Investigating representational relationships across visual cortex using relational neural control][paper_link]".
 
-## Environment setup --> Create environment file, and add right links to it  !!!!!!!!!!!!!!!!!!!!!!!
-To run the code first install [Anaconda][conda], then create and activate a dedicated Conda environment by typing the following into your terminal:
-```shell
-curl -O https://raw.githubusercontent.com/gifale95/neural_control/main/environment.yml
-conda env create -f environment.yml
-conda activate neural_control
-```
-Alternatively, after installing Anaconda you can download the [environment.yml][env_file] file, open the terminal in the download directory and type:
-```shell
-conda env create -f environment.yml
-conda activate neural_control
-```
+Alessandro T. Gifford, Maya A. Jastrzębowska, Johannes J.D. Singer, Radoslaw M. Cichy
+
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
 
-## Data availability !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-The Natural Scenes Dataset (NSD) is available at [www.naturalscenesdataset.org][nsd]. The THINGS EEG2 dataset is available on [OSF][things_eeg_2]. The neural control stimuli, along with their collected fMRI and EEG responses, are available on [OSF][new_collected_data]. To run the code, you need to download the data and place it into the following directories:
+## 📖 Theoretical motivation
 
-* **NSD:** `../project_directory/???`
-* **THINGS EEG2:** `../project_directory/???`
-* **Neural control stimuli:** `../project_directory/???`
-* **Collected fMRI responses:** `../project_directory/???`.
-* **Collected EEG responses:** `../project_directory/???`.
+Seeing is underpinned by a complex interconnected network of multiple brain regions of interest (ROIs) jointly representing visual information. However, the representational content of each ROI is typically studied in isolation, and using limited sets of experimenter-picked stimuli. We addressed this by developing [Relational Neural Control (RNC)][rnc_website], an exploratory method to investigate representational relationships between different ROIs of the human visual cortex, that is, shared and unique representational content betwen ROIs. RNC searches the stimulus space for controlling images aligning or disentangling different ROI's responses, thus highlighting representational similarities and differences (i.e., shared and unique representational content).
+
+We developed two RNC variants:
+
+* **Univariate RNC** controls _univariate_ fMRI responses (i.e., responses averaged over all voxels within an ROI), thus exploring representational relationships for visual information encoded in the strongest activation trends common across all ROI voxels.
+* **Multivariate RNC** controls _multivariate_ fMRI responses (i.e., population response of all voxels within a ROI), thus exploring representational relationships for visual information encoded in the multi-voxel response patterns.
+
+To thoroughly explore the visual space in search for controlling stimuli, RNC is applied to *in-silico* neural responses for thousands of naturalistic images, that is, neural responses generated through encoding models from the [Neural Encoding Dataset (NED)][ned_website]. Specifically, you will apply RNC to NED-generated *in-silico* fMRI responses for the 73,000 [Natural Scenes Dataset][nsd] ([Allen et al., 2022][allen]) images, the 50,000 [ImageNet 2012 Challenge][imagenet] ([Russakovsky et al., 2015][russakovsky]) images, or the 26,107 [THINGS Database][things] ([Hebart et al., 2019][hebart]) images.
+
+For any question regarding this code, the project data, or RNC in general, you can get in touch with Ale (alessandro.gifford@gmail.com).
 
 
 
-## Code description !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+## 💻 Tutorials
+
+We created interactive tutorials where you can lear how to use univariate and and multivariate RNC. These tutorials are available on either _Google Colab_ ([univariate RNC][uni_rnc_colab], [multivariate RNC][multi_rnc_colab]) or _Jupyter Notebook_ ([univariate RNC][uni_rnc_jupyter], [multivariate RNC][multi_rnc_jupyter]).
+
+
+
+## 📦 Code description !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+!!! Say that folders are numbered as main paper figures !!!
+!!! Briefly describe every code file !!!
+
 * **01_???:** ??? description ???.
 
 
 
-## Cite !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-If you use any of our data or code, partly or as it is, please cite our paper:
+## 🧰 Data
 
-Gifford AT, Singer JJD, Jastrzebowska M, Cichy RM. 2023. Disentangling the unique contribution of human retinotopic regions using neural control. _bioRxiv_, ???. DOI: [???][paper_link]
+To run the code you will need to download the following:
+
+* Neural Encoding dataset (https://www.alegifford.com/projects/ned/).
+
+* Natural Scenes Dataset (https://naturalscenesdataset.org/).
+
+* ILSVRC-2012 validation images (https://www.image-net.org/challenges/LSVRC/2012/index.php).
+
+* THINGS database images (https://things-initiative.org/).
+
+* The in-vivo fMRI responses for the controlling images (https://osf.io/t95zv/).
+
+
+
+## ❗ Issues
+
+If you experience problems with the code, please submit an issue!
+
+
+
+## 📜 Citation
+If you use any of our data or code, please cite the papers:
+
+> * *Gifford AT, Jastrzębowska M, Singer JJD, Cichy RM. 2023.Investigating representational relationships across visual cortex using relational neural control. _bioRxiv_, ???. DOI: [???][paper_link]*
+
+> * *Gifford AT, Cichy RM. 2024. The Neural Encoding Dataset. In preparation. https://github.com/gifale95/NED*
 
 
 
 [paper_link]: !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-[conda]: https://www.anaconda.com/
-[env_file]: !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-[nsd]: https://www.naturalscenesdataset.org/
-[things_eeg_2]: https://osf.io/3jk45/
-[new_collected_data]: !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+[rnc_website]: https://www.alegifford.com/projects/rnc/
+[nsd]: https://naturalscenesdataset.org/
+[allen]: https://www.nature.com/articles/s41593-021-00962-x
+[ned_website]: https://www.alegifford.com/projects/ned/
+[imagenet]: https://www.image-net.org/challenges/LSVRC/2012/index.php
+[russakovsky]: https://link.springer.com/article/10.1007/s11263-015-0816-y
+[things]: https://things-initiative.org/
+[hebart]: https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0223792
+[uni_rnc_colab]: https://colab.research.google.com/drive/1QpMSlvKZMLrDNeESdch6AlQ3qKsM1isO?usp=sharing
+[multi_rnc_colab]: https://colab.research.google.com/drive/1bEKCzkjNfM-jzxRj-JX2zxB17XBouw23?usp=sharing
+[uni_rnc_jupyter]: https://github.com/gifale95/RNC/tutorials/univariate_rnc_tutorial.ipynb
+[multi_rnc_jupyter]: https://github.com/gifale95/RNC/tutorials/multivariate_rnc_tutorial.ipynb
