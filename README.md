@@ -80,5 +80,5 @@ If you use any of our data or code, please cite:
 [hebart]: https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0223792
 [uni_rnc_colab]: https://colab.research.google.com/drive/1QpMSlvKZMLrDNeESdch6AlQ3qKsM1isO?usp=sharing
 [multi_rnc_colab]: https://colab.research.google.com/drive/1bEKCzkjNfM-jzxRj-JX2zxB17XBouw23?usp=sharing
-[uni_rnc_jupyter]: https://github.com/gifale95/RNC/tutorials/univariate_rnc_tutorial.ipynb
-[multi_rnc_jupyter]: https://github.com/gifale95/RNC/tutorials/multivariate_rnc_tutorial.ipynb
+[uni_rnc_jupyter]: https://github.com/gifale95/RNC/blob/main/tutorials/univariate_rnc_tutorial.ipynb
+[multi_rnc_jupyter]: https://github.com/gifale95/RNC/blob/main/tutorials/multivariate_rnc_tutorial.ipynb
