@@ -35,7 +35,7 @@ These comparisons are carried out independently for each voxel and subject, and
 the results averaged across voxels belonging to the same subject and ROI.
 
 This code is available at:
-https://github.com/gifale95/RNC/01_in_silico_fmri_encoding_accuracy/01_encoding_accuracy_and_noise_comparison.py
+https://github.com/gifale95/RNC/blob/main/01_in_silico_fmri_encoding_accuracy/01_encoding_accuracy_and_noise_comparison.py
 
 Parameters
 ----------

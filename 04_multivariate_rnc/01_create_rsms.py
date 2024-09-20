@@ -2,11 +2,8 @@
 RNC algorithm. Each RSM consists in the pairwise comparisons for all images from
 the chosen imageset.
 
-The synthetic fMRI responses come from the Neural Encoding Dataset (NED):
-https://github.com/gifale95/NED
-
 This code is available at:
-https://github.com/gifale95/RNC/04_multivariate_rnc/01_create_rsms.py
+https://github.com/gifale95/RNC/blob/main/04_multivariate_rnc/01_create_rsms.py
 
 Parameters
 ----------

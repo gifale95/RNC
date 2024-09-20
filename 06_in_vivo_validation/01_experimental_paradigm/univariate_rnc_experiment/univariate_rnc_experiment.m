@@ -12,6 +12,8 @@
 	% Target detection task (press button if Buzz Lightyear appears)
 	% 900 stimuli trials (6 repeats for each of the 150 images)
 
+% This code is available at:
+% https://github.com/gifale95/RNC/blob/main/06_in_vivo_validation/01_experimental_paradigm/univariate_rnc_experiment/univariate_rnc_experiment.m
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

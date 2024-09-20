@@ -5,10 +5,10 @@ For the aligning images, additionally compute the average RSM correlation
 scores for images with and without skies on their upper half.
 
 To analyze the same controlling images as in the RNC paper, use the stats file:
-https://github.com/gifale95/RNC/05_multivariate_rnc_retinotopy/stats.py
+https://github.com/gifale95/RNC/blob/main/05_multivariate_rnc_retinotopy/stats.npy
 
 This code is available at:
-https://github.com/gifale95/RNC/05_multivariate_rnc_retinotopy/01_controlling_images_rsms.py
+https://github.com/gifale95/RNC/blob/main/05_multivariate_rnc_retinotopy/01_controlling_images_rsms.py
 
 Parameters
 ----------
@@ -69,7 +69,7 @@ random.seed(seed)
 # Load the multivariate RNC cv-0 aligning images numbers
 # =============================================================================
 data_dir = os.path.join(args.project_dir, 'multivariate_rnc', 'stats', 'cv-0',
-	'imageset-nsd', 'V1-hV4', 'stats.npy') # https://github.com/gifale95/RNC/05_multivariate_rnc_retinotopy/stats.py
+	'imageset-nsd', 'V1-hV4', 'stats.npy') # https://github.com/gifale95/RNC/blob/main/05_multivariate_rnc_retinotopy/stats.npy
 
 stats = np.load(data_dir, allow_pickle=True).item()
 

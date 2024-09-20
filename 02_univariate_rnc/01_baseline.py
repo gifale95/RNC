@@ -10,11 +10,8 @@ distribution, from which the 25 images from the batch with score closest to the
 distribution's mean are selected. The synthetic fMRI univariate response score
 averaged across these 25 images provides the ROI's univariate response baseline.
 
-The synthetic fMRI responses come from the Neural Encoding Dataset (NED):
-https://github.com/gifale95/NED
-
 This code is available at:
-https://github.com/gifale95/RNC/02_univariate_rnc/01_baseline.py
+https://github.com/gifale95/RNC/blob/main/02_univariate_rnc/01_baseline.py
 
 Parameters
 ----------

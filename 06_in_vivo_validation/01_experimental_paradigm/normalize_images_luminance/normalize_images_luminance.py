@@ -5,7 +5,7 @@ screen with an RGB value of [127 127 127]).
 https://stackoverflow.com/questions/596216/formula-to-determine-perceived-brightness-of-rgb-color
 
 This code is available at:
-https://github.com/gifale95/RNC/05_multivariate_rnc_retinotopy/06_in_vivo_validation/01_experimental_paradigm/normalize_images_luminance/normalize_images_luminance.py
+https://github.com/gifale95/RNC/blob/main/06_in_vivo_validation/01_experimental_paradigm/normalize_images_luminance/normalize_images_luminance.py
 
 """
 
@@ -20,7 +20,7 @@ from PIL import Image, ImageEnhance
 # =============================================================================
 input_img_dir = '../path_to_input_image_folder'
 output_img_dir = '../path_to_output_image_folder'
-reference_img_dir = '../background.png' # https://github.com/gifale95/RNC/05_multivariate_rnc_retinotopy/06_in_vivo_validation/01_experimental_paradigm/normalize_images_luminance/background.png
+reference_img_dir = '../background.png' # https://github.com/gifale95/RNC/blob/main/06_in_vivo_validation/01_experimental_paradigm/normalize_images_luminance/background.png
 
 
 # =============================================================================

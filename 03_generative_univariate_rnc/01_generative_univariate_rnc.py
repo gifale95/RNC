@@ -8,7 +8,7 @@ threshold, thus promoting the generation of images containing only the visual
 properties necessary to align or disentangle the two areas.
 
 This code is available at:
-https://github.com/gifale95/RNC/03_generative_univariate_rnc/01_generative_univariate_rnc.py
+https://github.com/gifale95/RNC/blob/main/03_generative_univariate_rnc/01_generative_univariate_rnc.py
 
 Parameters
 ----------

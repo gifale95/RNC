@@ -1,7 +1,7 @@
 """Plot the generative univariate RNC results.
 
 This code is available at:
-https://github.com/gifale95/RNC/03_generative_univariate_rnc/02_plot.py
+https://github.com/gifale95/RNC/blob/main/03_generative_univariate_rnc/02_plot.py
 
 Parameters
 ----------

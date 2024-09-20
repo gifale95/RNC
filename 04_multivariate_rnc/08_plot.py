@@ -1,7 +1,7 @@
 """Plot the multivariate RNC cross-subject validated results.
 
 This code is available at:
-https://github.com/gifale95/RNC/04_multivariate_rnc/08_plot.py
+https://github.com/gifale95/RNC/blob/main/04_multivariate_rnc/08_plot.py
 
 Parameters
 ----------

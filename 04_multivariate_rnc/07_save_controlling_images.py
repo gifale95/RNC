@@ -3,7 +3,7 @@ in-silico univariate fMRI responses averaged over all subjects (i.e., with no
 subject cross-validation).
 
 This code is available at:
-https://github.com/gifale95/RNC/04_multivariate_rnc/07_save_controlling_images.py
+https://github.com/gifale95/RNC/blob/main/04_multivariate_rnc/07_save_controlling_images.py
 
 Parameters
 ----------

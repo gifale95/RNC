@@ -1,7 +1,7 @@
 """Plot the univariate RNC controlling images effect on the in vivo fMRI data.
 
 This code is available at:
-https://github.com/gifale95/RNC/06_in_vivo_validation/05_analyses/02_plot_univariate_rnc_effect.py
+https://github.com/gifale95/RNC/blob/main/06_in_vivo_validation/05_analyses/02_plot_univariate_rnc_effect.py
 
 Parameters
 ----------

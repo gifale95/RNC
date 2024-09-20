@@ -34,7 +34,7 @@ echo hem $HEM_ID
 # activate conda environment
 # include for this reason: https://stackoverflow.com/questions/34534513/calling-conda-source-activate-from-bash-script
 # You can install this environment using the .yml file in:
-# "https://github.com/gifale95/RNC/06_in_vivo_validation/03_prf_mapping/01_prf_mapping/prf-workflow.yml"
+# "https://github.com/gifale95/RNC/tree/main/06_in_vivo_validation/03_prf_mapping/01_prf_mapping/prf-workflow.yml"
 eval "$(conda shell.bash hook)"
 conda activate prf-workflow
 

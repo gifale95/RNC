@@ -4,14 +4,14 @@ comparison for aligning images that both include and not include uniform empty
 regions (i.e., the sky) their upper half.
 
 To analyze the same controlling images as in the RNC paper, use the stats file:
-https://github.com/gifale95/RNC/05_multivariate_rnc_retinotopy/stats.py
+https://github.com/gifale95/RNC/blob/main/05_multivariate_rnc_retinotopy/stats.py
 
 The V1 ventral and dorsal delineations are provided in NSD. The V4 ventral and
 dorsal delineations are avalable at:
-https://github.com/gifale95/RNC/05_multivariate_rnc_retinotopy/delineate_nsd_v4_dorsal_ventral/nsd_v4_delineations
+https://github.com/gifale95/RNC/blob/main/05_multivariate_rnc_retinotopy/delineate_nsd_v4_dorsal_ventral/nsd_v4_delineations
 
 This code is available at:
-https://github.com/gifale95/RNC/05_multivariate_rnc_retinotopy/02_retinotopy_effect.py
+https://github.com/gifale95/RNC/blob/main/05_multivariate_rnc_retinotopy/02_retinotopy_effect.py
 
 Parameters
 ----------
@@ -79,7 +79,7 @@ random.seed(seed)
 # Load the multivariate RNC cv-0 aligning images numbers
 # =============================================================================
 data_dir = os.path.join(args.project_dir, 'multivariate_rnc', 'stats', 'cv-0',
-	'imageset-nsd', 'V1-hV4', 'stats.npy') # https://github.com/gifale95/RNC/05_multivariate_rnc_retinotopy/stats.py
+	'imageset-nsd', 'V1-hV4', 'stats.npy') # https://github.com/gifale95/RNC/blob/main/05_multivariate_rnc_retinotopy/stats.py
 
 stats = np.load(data_dir, allow_pickle=True).item()
 
@@ -152,14 +152,14 @@ for s, sub in tqdm(enumerate(args.all_subjects)):
 		# Get the voxels of V4 ventral
 		roi_mask_ventral = nib.load(os.path.join(args.nsd_dir, 'nsddata',
 			'ppdata', 'subj'+format(sub, '02'), 'func1pt8mm', 'roi',
-			'V4v.nii.gz')).get_fdata() == 1 # https://github.com/gifale95/RNC/05_multivariate_rnc_retinotopy/delineate_nsd_v4_dorsal_ventral/nsd_v4_delineations
+			'V4v.nii.gz')).get_fdata() == 1 # https://github.com/gifale95/RNC/blob/main/05_multivariate_rnc_retinotopy/delineate_nsd_v4_dorsal_ventral/nsd_v4_delineations
 		roi_mask_volume_ventral = np.logical_and(roi_mask_volume,
 			roi_mask_ventral)
 
 		# Get the voxels of V4 dorsal
 		roi_mask_dorsal = nib.load(os.path.join(args.nsd_dir, 'nsddata',
 			'ppdata', 'subj'+format(sub, '02'), 'func1pt8mm', 'roi',
-			'V4d.nii.gz')).get_fdata() == 1 # # https://github.com/gifale95/RNC/05_multivariate_rnc_retinotopy/delineate_nsd_v4_dorsal_ventral/nsd_v4_delineations
+			'V4d.nii.gz')).get_fdata() == 1 # # https://github.com/gifale95/RNC/blob/main/05_multivariate_rnc_retinotopy/delineate_nsd_v4_dorsal_ventral/nsd_v4_delineations
 		roi_mask_volume_dorsal = np.logical_and(roi_mask_volume,
 			roi_mask_dorsal)
 

@@ -27,7 +27,7 @@ The synthetic fMRI responses come from the Neural Encoding Dataset (NED):
 https://github.com/gifale95/NED
 
 This code is available at:
-https://github.com/gifale95/RNC/02_univariate_rnc/02_univariate_rnc.py
+https://github.com/gifale95/RNC/blob/main/02_univariate_rnc/02_univariate_rnc.py
 
 Parameters
 ----------

@@ -1,7 +1,8 @@
-"""Synthesize fMRI responses to images using NED.
+"""Synthesize fMRI responses to images using the Neural Encoding Dataset (NED):
+https://github.com/gifale95/NED.
 
 This code is available at:
-https://github.com/gifale95/RNC/00_synthesize_fmri_responses/synthesize_fmri_responses.py
+https://github.com/gifale95/RNC/blob/main/00_synthesize_fmri_responses/synthesize_fmri_responses.py
 
 Parameters
 ----------

@@ -9,7 +9,7 @@ multivariate RNC will later be applied on the these RSMs to select the
 controlling images.
 
 This code is available at:
-https://github.com/gifale95/RNC/04_multivariate_rnc/03_average_rsms.py
+https://github.com/gifale95/RNC/blob/main/04_multivariate_rnc/03_average_rsms.py
 
 Parameters
 ----------

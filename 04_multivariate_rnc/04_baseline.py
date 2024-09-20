@@ -11,7 +11,7 @@ distribution's mean are selected. The RSA score for these 50 images provides the
 ROI's RSA baseline.
 
 This code is available at:
-https://github.com/gifale95/RNC/04_multivariate_rnc/04_baseline.py
+https://github.com/gifale95/RNC/blob/main/04_multivariate_rnc/04_baseline.py
 
 Parameters
 ----------

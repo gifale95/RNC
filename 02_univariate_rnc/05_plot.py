@@ -1,7 +1,7 @@
 """Plot the univariate RNC cross-subject validated results.
 
 This code is available at:
-https://github.com/gifale95/RNC/02_univariate_rnc/05_plot.py
+https://github.com/gifale95/RNC/blob/main/02_univariate_rnc/05_plot.py
 
 Parameters
 ----------

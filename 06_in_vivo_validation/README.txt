@@ -1,1 +1,1 @@
-- Running the "06_in_vivo_validation" code requires downloading the in-vivo recorded fMRI data from OpenNeuro (https://openneuro.org/datasets/ds005503), and adding it to the directory "../relational_neural_control/in_vivo_validation/in_vivo_fmri_dataset/raw/".
+Running the "06_in_vivo_validation" code requires downloading the in-vivo recorded fMRI data from OpenNeuro (https://openneuro.org/datasets/ds005503), and adding it to the directory "../relational_neural_control/in_vivo_validation/in_vivo_fmri_dataset/raw/".

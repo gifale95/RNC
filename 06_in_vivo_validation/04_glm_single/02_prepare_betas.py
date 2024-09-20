@@ -1,7 +1,7 @@
 """Prepare the fMRI betas for further analyses, and compute the ncsnr.
 
 This code is available at:
-https://github.com/gifale95/RNC/06_in_vivo_validation/04_glm_single/02_prepare_betas.py
+https://github.com/gifale95/RNC/blob/main/06_in_vivo_validation/04_glm_single/02_prepare_betas.py
 
 Parameters
 ----------

@@ -1,7 +1,7 @@
 """Plot the multivariate RNC retinotopy effect results.
 
 This code is available at:
-https://github.com/gifale95/RNC/05_multivariate_rnc_retinotopy/03_plot.py
+https://github.com/gifale95/RNC/blob/main/05_multivariate_rnc_retinotopy/03_plot.py
 
 Parameters
 ----------

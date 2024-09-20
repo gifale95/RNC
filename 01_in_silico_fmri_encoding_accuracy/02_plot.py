@@ -3,7 +3,7 @@ variance for areas V1, V2, V3 and V4 (subject-average), as well as the noise
 analysis.
 
 This code is available at:
-https://github.com/gifale95/RNC/01_in_silico_fmri_encoding_accuracy/02_plot.py
+https://github.com/gifale95/RNC/blob/main/01_in_silico_fmri_encoding_accuracy/02_plot.py
 
 Parameters
 ----------

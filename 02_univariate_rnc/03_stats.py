@@ -6,7 +6,7 @@ The code additionally compares the univariate RNC scores of pairwise ROI
 comparisons from different stepwise ROI distances.
 
 This code is available at:
-https://github.com/gifale95/RNC/02_univariate_rnc/03_stats.py
+https://github.com/gifale95/RNC/blob/main/02_univariate_rnc/03_stats.py
 
 Parameters
 ----------

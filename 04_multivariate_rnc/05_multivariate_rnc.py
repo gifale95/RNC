@@ -8,7 +8,7 @@ for the two ROIs being compared, thus highlighting shared and unique
 representational content, respectively.
 
 This code is available at:
-https://github.com/gifale95/RNC/04_multivariate_rnc/05_multivariate_rnc.py
+https://github.com/gifale95/RNC/blob/main/04_multivariate_rnc/05_multivariate_rnc.py
 
 Parameters
 ----------

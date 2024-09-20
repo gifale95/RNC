@@ -64,8 +64,8 @@ If you experience problems with the code, please submit an issue!
 ## 📜 Citation
 If you use any of our data or code, please cite:
 
-> * *Gifford AT, Jastrzębowska M, Singer JJD, Cichy RM. 2024. Investigating representational relationships across visual cortex using relational neural control. _bioRxiv_, ???. DOI: [???][paper_doi]*
-> * *Gifford AT, Cichy RM. 2024. The Neural Encoding Dataset. In preparation. https://github.com/gifale95/NED*
+> * Gifford AT, Jastrzębowska M, Singer JJD, Cichy RM. 2024. In silico discovery of representational relationships across visual cortex. _bioRxiv_, ???. DOI: [???][paper_doi]
+> * Gifford AT, Cichy RM. 2024. The Neural Encoding Dataset. _In preparation_. https://github.com/gifale95/NED
 
 
 

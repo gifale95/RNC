@@ -1,10 +1,10 @@
 """Convert the V4v/V4d labels delineated with freeview to functional space.
 
 The V4 ventral and dorsal delineations can be found here:
-https://github.com/gifale95/RNC/05_multivariate_rnc_retinotopy/delineate_nsd_v4_dorsal_ventral/nsd_v4_delineations
+https://github.com/gifale95/RNC/blob/main/05_multivariate_rnc_retinotopy/delineate_nsd_v4_dorsal_ventral/nsd_v4_delineations
 
 This code is available at:
-https://github.com/gifale95/RNC/05_multivariate_rnc_retinotopy/delineate_nsd_v4_dorsal_ventral/v4_surface_to_vol.py
+https://github.com/gifale95/RNC/blob/main/05_multivariate_rnc_retinotopy/delineate_nsd_v4_dorsal_ventral/v4_surface_to_vol.py
 
 Parameters
 ----------

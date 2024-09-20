@@ -5,7 +5,7 @@ https://glmsingle.readthedocs.io/en/latest/python.html
 https://htmlpreview.github.io/?https://github.com/kendrickkay/GLMsingle/blob/main/examples/example1.html
 
 This code is available at:
-https://github.com/gifale95/RNC/06_in_vivo_validation/04_glm_single/01_glm_single.py
+https://github.com/gifale95/RNC/blob/main/06_in_vivo_validation/04_glm_single/01_glm_single.py
 
 Parameters
 ----------
@@ -65,7 +65,7 @@ seed = 20200220
 # Get ROI voxel mask
 # =============================================================================
 # The V1 and V4 manual delineations in subject-native volume space found in:
-# "https://github.com/gifale95/RNC/06_in_vivo_validation/03_prf_mapping/02_delineate_rois/v1_v4_rois_volume/derived/sub-0*/alldata/roi/*h.V*.func.nii.gz"
+# "https://github.com/gifale95/RNC/tree/main/06_in_vivo_validation/03_prf_mapping/02_delineate_rois/v1_v4_rois_volume/derived/sub-0*/alldata/roi/*h.V*.func.nii.gz"
 # need to be added to the directory:
 # "../relational_neural_control/in_vivo_validation/in_vivo_fmri_dataset/derived/sub0*/alldata/roi/"
 
