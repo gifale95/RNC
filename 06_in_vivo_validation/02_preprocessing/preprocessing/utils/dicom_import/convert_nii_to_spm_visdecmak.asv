@@ -1,0 +1,201 @@
+% function [hdr,cfg] = convert_nii_to_spm_visdecmak(nii,json,cfg,i_sub)
+%
+% This function takes the filenames of the converted nifti and json files and converts
+% them into files that can be used by SPM and saves them in a folder
+% structure that is suitable for all further analyses. The
+% structure can be set by calling config_subjects (see config_subject.m,
+% for an example that you can modify). If the field PatientID doesn't
+% exist, it is added from cfg.sub(i_sub).pid.
+%
+% cfg is a struct and needs the following fields:
+%    sub: One sub-structure for each subject, with at least the field
+%       import: Specifies the numbers that the scanner gave to each run,
+%               with the following fields including some examples:
+%           anatomy = 2
+%           field_map = [3 4]
+%           experiment = [5 6 8 9 10]
+%           localizer = 11 % this is a functional localizer run
+%    dirs: Directory structure with fields:
+%       data_dir: Basic directory of all data of all subjects (e.g. c:\myexperiment)
+%       sub_dir(i_sub): Structure containing the subject directories of
+%           all subjects (optional, but useful later)
+%    n_runs: Number of experimental runs of the current participant
+%    n_dummy: Number of dummy scans in the beginning that were not
+%       automatically discarded by the scanner
+%    n_scans_experiment: Number of scans of the experiment (optional)
+%    n_scans_localizer: Number of scans of the localizer (optional)
+%    prefix: Name of your experiment, will end up in the file names (e.g.
+%       myexperiment)
+%    import: Specifies the numbers that the scanner gave to each run, with
+%       the following fields including some examples:
+%       anatomy = 2
+%       field_map = [3 4]
+%       experiment = [5 6 8 9 10]
+%       localizer = 11 % this is a functional localizer run
+%
+%
+%   If this doesn't fit your description, because e.g. you have several
+%   localizers, you need to change this function to fit to your needs.
+%
+% Update 2013/07/26: Automatically discard unnecessary images, introduce
+%   trash folder for these images
+% 2009, by Martin N. Hebart
+
+function convert_nii_to_spm_visdecmak(nii,json,input_dir,cfg,i_sub)
+
+anatomy_name = 'struct';
+fieldmap_name = 'fieldmap';
+other_name = 'other';
+trash_name = 'trash';
+localizer_name = 'localizer';
+parameters_name = 'parameters';
+derived_dir = cfg.dirs.derived_dir;
+
+%% Set paths in the standard manner
+
+sub_dir = fullfile(derived_dir,sprintf('sub%02d',i_sub),'alldata');
+
+mkdirc(fullfile(sub_dir,anatomy_name))
+mkdirc(fullfile(sub_dir,fieldmap_name))
+mkdirc(fullfile(sub_dir,other_name))
+mkdirc(fullfile(sub_dir,trash_name))
+mkdirc(fullfile(sub_dir,parameters_name))
+mkdirc(fullfile(sub_dir, localizer_name))
+mkdirc(fullfile(sub_dir,'mean'))
+
+n_runs = cfg.sub(i_sub).n_runs;
+
+for i_run = 1:n_runs
+    run_dir = sprintf('run%02d',i_run);
+    mkdirc(fullfile(sub_dir,run_dir))
+end
+
+%% get the indices of all aquisition steps
+
+fnames = cell(length(nii),1);
+
+for i = 1:length(nii) % go through all DICOMs and add field fname to hdr
+    
+    % load the json file
+    fname = fullfile(input_dir,json{i});
+    fid = fopen(fname);
+    raw = fread(fid,inf);
+    str = char(raw');
+    fclose(fid);
+    hdr = jsondecode(str);
+    
+    % If it's an anatomical image
+    if any(ismember(hdr.SeriesNumber,cfg.sub(i_sub).import.anatomy))
+        if hdr.SeriesNumber == cfg.sub(i_sub).import.anatomy(1)
+            %         fname = sprintf('%s%.2d-%.2d.img',...
+            %             anatomy_name,i_sub,hdr.SeriesNumber);
+            %         anat_hdr = spm_vol(fullfile(input_dir, nii{i}));
+            %         anat_vol = spm_read_vols(anat_hdr);
+            %         anat_hdr.fname = fullfile(sub_dir,anatomy_name,fname);
+            %         spm_write_vol(anat_hdr,anat_vol);
+        elseif hdr.SeriesNumber == cfg.sub(i_sub).import.anatomy(2)
+            fname = sprintf('%s_inplane_%.2d-%.2d.img',...
+                anatomy_name,i_sub,hdr.SeriesNumber);
+            anat_hdr = spm_vol(fullfile(input_dir, nii{i}));
+            anat_vol = spm_read_vols(anat_hdr);
+            anat_hdr.fname = fullfile(sub_dir,anatomy_name,fname);
+            spm_write_vol(anat_hdr,anat_vol);
+        end
+        
+        %If it's a functional run
+    elseif sum(ismember(cfg.sub(i_sub).import.experiment,hdr.SeriesNumber))
+        
+                i_run = find(cfg.sub(i_sub).import.experiment == hdr.SeriesNumber);
+        
+                % split the 4D nifti to 3D nifits in the functional folder
+                spm_file_split(fullfile(input_dir,nii{i}),fullfile(sub_dir,sprintf('run%.2d',i_run)));
+        
+                % get all images in the folder
+                func_files = dir(fullfile(sub_dir,sprintf('run%.2d',i_run),'*.nii'));
+                func_files = {func_files.name}'
+        
+                for i_image = 1:length(func_files)
+        
+        %             this_hdr = spm_vol([func_hdrs(i_image).fname ',' num2str(i_image)]);
+        %             this_hdr.pinfo = func_hdrs(1).pinfo;
+        %             this_hdr.n= [];
+        %             vol = spm_read_vols(this_hdr);
+        
+                    if i_image >= 1 && i_image <= cfg.n_scans_experiment
+                        fname = sprintf('f%s%.2d-%.2d-%.3d.nii',...
+                            cfg.prefix,i_sub,i_run,i_image);
+                        fname = fullfile(sub_dir,sprintf('run%.2d',i_run),fname);
+                    elseif i_image <= 0
+                        fname = sprintf('f%s%.2d-%.2d-dummy%.3d.nii',...
+                            cfg.prefix,i_sub,i_run,i_image);
+                        fname = fullfile(sub_dir,trash_name,fname);
+                    else
+                        fname = sprintf('f%s%.2d-%.2d-%.3d.nii',...
+                            cfg.prefix,i_sub,i_run,i_image);
+                        fname = fullfile(sub_dir,trash_name,fname);
+                    end
+                    % write the image
+                    movefile(fullfile(sub_dir,sprintf('run%.2d',i_run),func_files{i_image}),fname)
+                    %spm_write_vol(this_hdr,vol);
+        end
+        
+    %    If it's a localizer run
+    elseif sum(ismember(cfg.sub(i_sub).import.localizer,hdr.SeriesNumber))
+                i_run = find(cfg.sub(i_sub).import.localizer == hdr.SeriesNumber);
+                % split the 4D nifti to 3D nifits in the functional folder
+                spm_file_split(fullfile(input_dir,nii{i}),fullfile(sub_dir,'localizer'));
+        
+                % get all images in the folder
+                func_files = dir(fullfile(sub_dir,'localizer','*.nii'));
+                func_files = {func_files.name}';
+        
+                for i_image = 1:length(func_files)
+                    if i_image >= 1 && i_image <= cfg.n_scans_localizer
+                        fname = sprintf('f%s%.2d-%.2d-%.3d.nii',...
+                            cfg.prefix_localizer,i_sub,i_run,i_image);
+                    elseif i_image <0
+                        fname = sprintf('f%s%.2d-%.2d-dummy%.3d.nii',...
+                            cfg.prefix_localizer,i_sub,i_run,i_image);
+                    else
+                        fname = sprintf('f%s%.2d-%.2d-%.3d.nii',...
+                            cfg.prefix_localizer,i_sub,i_run,i_image);
+                    end
+                    % write the image
+                    movefile(fullfile(sub_dir,'localizer',func_files{i_image}),fullfile(sub_dir,'localizer',fname));
+        end
+        
+        % If fieldmap
+    elseif sum(ismember(cfg.sub(i_sub).import.fieldmap,hdr.SeriesNumber))
+        fname = sprintf('%s%.2d-%.2d-%s-%i.nii',...
+            fieldmap_name,i_sub,hdr.SeriesNumber,hdr.ImageType{3},hdr.EchoTime*100000);
+        fieldmap_hdr = spm_vol(fullfile(input_dir,nii{i}));
+        fieldmap_vol = spm_read_vols(fieldmap_hdr);
+        fieldmap_hdr.fname = fullfile(sub_dir,fieldmap_name,fname);
+        %write vol
+        spm_write_vol(fieldmap_hdr, fieldmap_vol);
+        
+        % Otherwise
+    else
+        fname = sprintf('%s%.2d-%.2d-%.3d.nii',...
+            cfg.prefix,i_sub,hdr.SeriesNumber);
+        other_hdr.fname = fullfile(sub_dir,other_name,fname);
+        other_hdr.prefix = 's';
+    end
+    
+end
+
+% % Run check that no Number exists twice
+% fnames_length = max(cell2mat(cellfun(@(x) length(x), fnames, 'uniformOutput',false))); % maximal filename length
+% fnames = cell2mat(cellfun(@(x) [x repmat(' ',1,fnames_length - length(x))], fnames, 'uniformOutput',false));
+%
+% for i = 2:size(fnames,1)
+%     if strcmp(fnames(i,:),fnames(i-1,:))
+%         error('Double Entries found in the filenames of subject %i (e.g. %s). Please check!',i_sub,fnames(i,:))
+%     end
+% end
+
+
+%%%%%%%%%%%%%%%%%%%%%
+function mkdirc(d)
+if exist(d,'dir'), rmdir(d),
+elsif ~exist(d,'dir'), mkdir(d), end

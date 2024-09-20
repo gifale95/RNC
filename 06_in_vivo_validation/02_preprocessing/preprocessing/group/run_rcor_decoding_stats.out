@@ -1,0 +1,228 @@
+Opening log file:  /home/singej96/java.log.7779
+
+                            < M A T L A B (R) >
+                  Copyright 1984-2021 The MathWorks, Inc.
+                  R2021a (9.10.0.1602886) 64-bit (glnxa64)
+                             February 17, 2021
+
+ 
+To get started, type doc.
+For product information, visit www.mathworks.com.
+ 
+Loading fMRI sub01
+Loading fMRI sub02
+Loading fMRI sub03
+Loading fMRI sub04
+Loading fMRI sub05
+Loading fMRI sub06
+Loading fMRI sub07
+Loading fMRI sub08
+Loading fMRI sub09
+Loading fMRI sub10
+Loading fMRI sub11
+Loading fMRI sub12
+Loading fMRI sub13
+Loading fMRI sub14
+Loading fMRI sub15
+Loading fMRI sub16
+Create permutation samples: 100 out of 10000
+Create permutation samples: 200 out of 10000
+Create permutation samples: 300 out of 10000
+Create permutation samples: 400 out of 10000
+Create permutation samples: 500 out of 10000
+Create permutation samples: 600 out of 10000
+Create permutation samples: 700 out of 10000
+Create permutation samples: 800 out of 10000
+Create permutation samples: 900 out of 10000
+Create permutation samples: 1000 out of 10000
+Create permutation samples: 1100 out of 10000
+Create permutation samples: 1200 out of 10000
+Create permutation samples: 1300 out of 10000
+Create permutation samples: 1400 out of 10000
+Create permutation samples: 1500 out of 10000
+Create permutation samples: 1600 out of 10000
+Create permutation samples: 1700 out of 10000
+Create permutation samples: 1800 out of 10000
+Create permutation samples: 1900 out of 10000
+Create permutation samples: 2000 out of 10000
+Create permutation samples: 2100 out of 10000
+Create permutation samples: 2200 out of 10000
+Create permutation samples: 2300 out of 10000
+Create permutation samples: 2400 out of 10000
+Create permutation samples: 2500 out of 10000
+Create permutation samples: 2600 out of 10000
+Create permutation samples: 2700 out of 10000
+Create permutation samples: 2800 out of 10000
+Create permutation samples: 2900 out of 10000
+Create permutation samples: 3000 out of 10000
+Create permutation samples: 3100 out of 10000
+Create permutation samples: 3200 out of 10000
+Create permutation samples: 3300 out of 10000
+Create permutation samples: 3400 out of 10000
+Create permutation samples: 3500 out of 10000
+Create permutation samples: 3600 out of 10000
+Create permutation samples: 3700 out of 10000
+Create permutation samples: 3800 out of 10000
+Create permutation samples: 3900 out of 10000
+Create permutation samples: 4000 out of 10000
+Create permutation samples: 4100 out of 10000
+Create permutation samples: 4200 out of 10000
+Create permutation samples: 4300 out of 10000
+Create permutation samples: 4400 out of 10000
+Create permutation samples: 4500 out of 10000
+Create permutation samples: 4600 out of 10000
+Create permutation samples: 4700 out of 10000
+Create permutation samples: 4800 out of 10000
+Create permutation samples: 4900 out of 10000
+Create permutation samples: 5000 out of 10000
+Create permutation samples: 5100 out of 10000
+Create permutation samples: 5200 out of 10000
+Create permutation samples: 5300 out of 10000
+Create permutation samples: 5400 out of 10000
+Create permutation samples: 5500 out of 10000
+Create permutation samples: 5600 out of 10000
+Create permutation samples: 5700 out of 10000
+Create permutation samples: 5800 out of 10000
+Create permutation samples: 5900 out of 10000
+Create permutation samples: 6000 out of 10000
+Create permutation samples: 6100 out of 10000
+Create permutation samples: 6200 out of 10000
+Create permutation samples: 6300 out of 10000
+Create permutation samples: 6400 out of 10000
+Create permutation samples: 6500 out of 10000
+Create permutation samples: 6600 out of 10000
+Create permutation samples: 6700 out of 10000
+Create permutation samples: 6800 out of 10000
+Create permutation samples: 6900 out of 10000
+Create permutation samples: 7000 out of 10000
+Create permutation samples: 7100 out of 10000
+Create permutation samples: 7200 out of 10000
+Create permutation samples: 7300 out of 10000
+Create permutation samples: 7400 out of 10000
+Create permutation samples: 7500 out of 10000
+Create permutation samples: 7600 out of 10000
+Create permutation samples: 7700 out of 10000
+Create permutation samples: 7800 out of 10000
+Create permutation samples: 7900 out of 10000
+Create permutation samples: 8000 out of 10000
+Create permutation samples: 8100 out of 10000
+Create permutation samples: 8200 out of 10000
+Create permutation samples: 8300 out of 10000
+Create permutation samples: 8400 out of 10000
+Create permutation samples: 8500 out of 10000
+Create permutation samples: 8600 out of 10000
+Create permutation samples: 8700 out of 10000
+Create permutation samples: 8800 out of 10000
+Create permutation samples: 8900 out of 10000
+Create permutation samples: 9000 out of 10000
+Create permutation samples: 9100 out of 10000
+Create permutation samples: 9200 out of 10000
+Create permutation samples: 9300 out of 10000
+Create permutation samples: 9400 out of 10000
+Create permutation samples: 9500 out of 10000
+Create permutation samples: 9600 out of 10000
+Create permutation samples: 9700 out of 10000
+Create permutation samples: 9800 out of 10000
+Create permutation samples: 9900 out of 10000
+Create permutation samples: 10000 out of 10000
+Compute maximum cluster: 100 out of 10000
+Compute maximum cluster: 200 out of 10000
+Compute maximum cluster: 300 out of 10000
+Compute maximum cluster: 400 out of 10000
+Compute maximum cluster: 500 out of 10000
+Compute maximum cluster: 600 out of 10000
+Compute maximum cluster: 700 out of 10000
+Compute maximum cluster: 800 out of 10000
+Compute maximum cluster: 900 out of 10000
+Compute maximum cluster: 1000 out of 10000
+Compute maximum cluster: 1100 out of 10000
+Compute maximum cluster: 1200 out of 10000
+Compute maximum cluster: 1300 out of 10000
+Compute maximum cluster: 1400 out of 10000
+Compute maximum cluster: 1500 out of 10000
+Compute maximum cluster: 1600 out of 10000
+Compute maximum cluster: 1700 out of 10000
+Compute maximum cluster: 1800 out of 10000
+Compute maximum cluster: 1900 out of 10000
+Compute maximum cluster: 2000 out of 10000
+Compute maximum cluster: 2100 out of 10000
+Compute maximum cluster: 2200 out of 10000
+Compute maximum cluster: 2300 out of 10000
+Compute maximum cluster: 2400 out of 10000
+Compute maximum cluster: 2500 out of 10000
+Compute maximum cluster: 2600 out of 10000
+Compute maximum cluster: 2700 out of 10000
+Compute maximum cluster: 2800 out of 10000
+Compute maximum cluster: 2900 out of 10000
+Compute maximum cluster: 3000 out of 10000
+Compute maximum cluster: 3100 out of 10000
+Compute maximum cluster: 3200 out of 10000
+Compute maximum cluster: 3300 out of 10000
+Compute maximum cluster: 3400 out of 10000
+Compute maximum cluster: 3500 out of 10000
+Compute maximum cluster: 3600 out of 10000
+Compute maximum cluster: 3700 out of 10000
+Compute maximum cluster: 3800 out of 10000
+Compute maximum cluster: 3900 out of 10000
+Compute maximum cluster: 4000 out of 10000
+Compute maximum cluster: 4100 out of 10000
+Compute maximum cluster: 4200 out of 10000
+Compute maximum cluster: 4300 out of 10000
+Compute maximum cluster: 4400 out of 10000
+Compute maximum cluster: 4500 out of 10000
+Compute maximum cluster: 4600 out of 10000
+Compute maximum cluster: 4700 out of 10000
+Compute maximum cluster: 4800 out of 10000
+Compute maximum cluster: 4900 out of 10000
+Compute maximum cluster: 5000 out of 10000
+Compute maximum cluster: 5100 out of 10000
+Compute maximum cluster: 5200 out of 10000
+Compute maximum cluster: 5300 out of 10000
+Compute maximum cluster: 5400 out of 10000
+Compute maximum cluster: 5500 out of 10000
+Compute maximum cluster: 5600 out of 10000
+Compute maximum cluster: 5700 out of 10000
+Compute maximum cluster: 5800 out of 10000
+Compute maximum cluster: 5900 out of 10000
+Compute maximum cluster: 6000 out of 10000
+Compute maximum cluster: 6100 out of 10000
+Compute maximum cluster: 6200 out of 10000
+Compute maximum cluster: 6300 out of 10000
+Compute maximum cluster: 6400 out of 10000
+Compute maximum cluster: 6500 out of 10000
+Compute maximum cluster: 6600 out of 10000
+Compute maximum cluster: 6700 out of 10000
+Compute maximum cluster: 6800 out of 10000
+Compute maximum cluster: 6900 out of 10000
+Compute maximum cluster: 7000 out of 10000
+Compute maximum cluster: 7100 out of 10000
+Compute maximum cluster: 7200 out of 10000
+Compute maximum cluster: 7300 out of 10000
+Compute maximum cluster: 7400 out of 10000
+Compute maximum cluster: 7500 out of 10000
+Compute maximum cluster: 7600 out of 10000
+Compute maximum cluster: 7700 out of 10000
+Compute maximum cluster: 7800 out of 10000
+Compute maximum cluster: 7900 out of 10000
+Compute maximum cluster: 8000 out of 10000
+Compute maximum cluster: 8100 out of 10000
+Compute maximum cluster: 8200 out of 10000
+Compute maximum cluster: 8300 out of 10000
+Compute maximum cluster: 8400 out of 10000
+Compute maximum cluster: 8500 out of 10000
+Compute maximum cluster: 8600 out of 10000
+Compute maximum cluster: 8700 out of 10000
+Compute maximum cluster: 8800 out of 10000
+Compute maximum cluster: 8900 out of 10000
+Compute maximum cluster: 9000 out of 10000
+Compute maximum cluster: 9100 out of 10000
+Compute maximum cluster: 9200 out of 10000
+Compute maximum cluster: 9300 out of 10000
+Compute maximum cluster: 9400 out of 10000
+Compute maximum cluster: 9500 out of 10000
+Compute maximum cluster: 9600 out of 10000
+Compute maximum cluster: 9700 out of 10000
+Compute maximum cluster: 9800 out of 10000
+Compute maximum cluster: 9900 out of 10000
+Compute maximum cluster: 10000 out of 10000
+pValue(max) = 0.0018; pValue(weighted) = 0.027.

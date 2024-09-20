@@ -1,0 +1,44 @@
+- Each participant has 2 sessions.
+
+- Train participants on the main experiment task before:
+	- 3m of training should be enough.
+	- Make sure participants know what Buzz Lightyear looks like.
+	- Explicitely ask them to pay attention to the images, even if they are not the target ones.
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Session 1 (97m + pauses)
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+- Anatomical scan (5m)
+
+- Field map (5m)
+
+- pRF experiment (15m + pauses)
+	- Run length: 300s
+	- Total runs: 3 (3 runs x 300s = 900s = 15m)
+	- Script path: "https://github.com/gifale95/RNC/06_in_vivo_validation/01_experimental_paradigm/prf_experiment/knkutils-master/pt/runretinotopy.m"
+	- Experiment number: 93 (you will be asked this once you start each run, along with subject and run number)
+	- Task: press the button whenever the fixation dot changes color
+
+- Univariate control images experiment (72m + pauses)
+	- Run length: 436s
+	- Total runs: 10 (10 runs x 436s = 4360s = ~72m)
+	- Script path: "https://github.com/gifale95/RNC/06_in_vivo_validation/01_experimental_paradigm/univariate_rnc_experiment/univariate_rnc_experiment.m"
+	- Task: target detection (press button when you see Buzz Lightyear)
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Session 2 (107m + pauses)
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+- Anatomical scan (5m)
+
+- Field map (5m)
+
+- Multivariate control images experiment (97m + pauses)
+	- Run length: 484s
+	- Total runs: 12 (12 runs x 484s = 5808s = ~97m)
+	- Script path: "https://github.com/gifale95/RNC/06_in_vivo_validation/01_experimental_paradigm/multivariate_rnc_experiment/multivariate_rnc_experiment.m"
+	- Task: target detection (press button when you see Buzz Lightyear)
+

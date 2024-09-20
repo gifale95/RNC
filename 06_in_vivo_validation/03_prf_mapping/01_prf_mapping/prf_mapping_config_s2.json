@@ -1,0 +1,61 @@
+{
+    "ProjectConfig": {
+        "subject_list": ["sub-02"],
+        "hem_list": ["lh", "rh"],
+        "n_surfs": 1,
+        "logger_dir": "../06_in_vivo_validation/03_prf_mapping/01_prf_mapping"
+    },
+    "DirConfig": {
+        "FS_dir": "../relational_neural_control/in_vivo_validation/in_vivo_fmri_dataset/data_FS",
+        "output_dir": "../relational_neural_control/in_vivo_validation/in_vivo_fmri_dataset/prf_output",
+        "apertures_dir": "../06_in_vivo_validation/03_prf_mapping/01_prf_mapping/get_aperture/apertures",
+        "surface_tools_dir": "../06_in_vivo_validation/03_prf_mapping/01_prf_mapping/surface_tools"
+    },
+    "PrfMappingConfig": {
+        "screen_height_cm": 27.0,
+        "screen_distance_cm": 111.0,
+        "which_model": "Iso",
+        "avg_runs": true,
+        "fit_hrf": false,
+        "start_from_avg": true,
+        "grid_nr": 30,
+        "y_coord_cutoff": -45,
+        "verbose": true,
+        "hrf": null,
+        "filter_predictions": false,
+        "filter_type": "sg",
+        "filter_params": {
+            "window_length": 201,
+            "polyorder": 3
+        },
+        "normalize_RFs": false,
+        "rsq_thresh_itfit": 0.005,
+        "rsq_thresh_viz": 0.01,
+        "reference_aperture": "bar"
+    },
+    "MriConfig": {
+        "TR": 1.0,
+        "equivol_fn": "equi",
+        "meanFunc_nii_fn": "../relational_neural_control/in_vivo_validation/in_vivo_fmri_dataset/derived/sub02/alldata/mean/umeanf02-01-001.nii",
+        "prf_run_config": {
+            "bar": {
+                "n_runs": 3,
+                "ap_fn": "stimulus_bar.mat",
+                "nii_fn_list": ["../relational_neural_control/in_vivo_validation/in_vivo_fmri_dataset/derived/sub02/alldata/run01/uarf02-01.nii",
+                                "../relational_neural_control/in_vivo_validation/in_vivo_fmri_dataset/derived/sub02/alldata/run02/uarf02-02.nii",
+                                "../relational_neural_control/in_vivo_validation/in_vivo_fmri_dataset/derived/sub02/alldata/run03/uarf02-03.nii"
+                            ]
+            }
+        }
+    },
+    "DataCleanConfig":  {
+        "detrend": true,
+        "standardize": "zscore",
+        "high_pass": 0.01,
+        "low_pass": 0.1,
+        "filter": "butterworth",
+        "confounds": null
+    }
+  }
+
+

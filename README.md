@@ -1,7 +1,7 @@
-# Investigating representational relationships across visual cortex using relational neural control
+# In silico discovery of representational relationships across visual cortex
 
-Here we provide the code to reproduce the results of the paper:</br>
-"[Investigating representational relationships across visual cortex using relational neural control][paper_link]".</br>
+Here we provide the code from the paper:</br>
+"[In silico discovery of representational relationships across visual cortex][paper_doi]".</br>
 Alessandro T. Gifford, Maya A. Jastrzębowska, Johannes J.D. Singer, Radoslaw M. Cichy
 
 
@@ -15,7 +15,7 @@ We developed two RNC variants:
 * **Univariate RNC** controls _univariate_ fMRI responses (i.e., responses averaged over all voxels within an ROI), thus exploring representational relationships for visual information encoded in the strongest activation trends common across all ROI voxels.
 * **Multivariate RNC** controls _multivariate_ fMRI responses (i.e., population response of all voxels within a ROI), thus exploring representational relationships for visual information encoded in the multi-voxel response patterns.
 
-To thoroughly explore the visual space in search for controlling stimuli, RNC is applied to *in-silico* neural responses for thousands of naturalistic images, that is, neural responses generated through encoding models from the [Neural Encoding Dataset (NED)][ned_website]. Specifically, you will apply RNC to NED-generated *in-silico* fMRI responses for the 73,000 [Natural Scenes Dataset][nsd] ([Allen et al., 2022][allen]) images, the 50,000 [ImageNet 2012 Challenge][imagenet] ([Russakovsky et al., 2015][russakovsky]) images, or the 26,107 [THINGS Database][things] ([Hebart et al., 2019][hebart]) images.
+To thoroughly explore the visual space in search for controlling stimuli, RNC is applied to *in-silico* neural responses for thousands of naturalistic images, that is, neural responses generated through encoding models from the [Neural Encoding Dataset (NED)][ned_website]. Specifically, this includes NED-generated *in-silico* fMRI responses for the 73,000 [Natural Scenes Dataset][nsd] ([Allen et al., 2022][allen]) images, the 50,000 [ImageNet 2012 Challenge][imagenet] ([Russakovsky et al., 2015][russakovsky]) images, or the 26,107 [THINGS Database][things] ([Hebart et al., 2019][hebart]) images.
 
 For any question regarding this code, the project data, or RNC in general, you can get in touch with Ale (alessandro.gifford@gmail.com).
 
@@ -30,7 +30,7 @@ We created interactive tutorials where you can lear how to use univariate and an
 ## 📦 Code description
 
 * **00_synthesize_fmri_responses:** Generate _in-silico_ fMRI responses for naturalistic images, using trained encoding models from the Neural Encoding Dataset.
-* **01_in_silico_fmri_encoding_accuracy:** Compute the encoding accuracy and perform a noise analysis of the _in-silico_ fMRI responses.
+* **01_in_silico_fmri_encoding_accuracy:** Compute the encoding accuracy and perform a noise analysis on the _in-silico_ fMRI responses.
 * **02_univariate_rnc:** Apply univariate RNC on the _in-silico_ fMRI responses.
 * **03_generative_univariate_rnc:** Apply generative univariate RNC on  _in-silico_ fMRI responses.
 * **04_multivariate_rnc:** Apply multivariate RNC on the _in-silico_ fMRI responses.
@@ -51,7 +51,7 @@ To run the code you will need to download the following:
 
 * THINGS database images (https://things-initiative.org/).
 
-* The in-vivo fMRI responses for the controlling images (https://osf.io/t95zv/).
+* The in-vivo fMRI responses for the controlling images (https://openneuro.org/datasets/ds005503).
 
 
 
@@ -62,14 +62,14 @@ If you experience problems with the code, please submit an issue!
 
 
 ## 📜 Citation
-If you use any of our data or code, please cite the papers:
+If you use any of our data or code, please cite:
 
-> * *Gifford AT, Jastrzębowska M, Singer JJD, Cichy RM. 2023.Investigating representational relationships across visual cortex using relational neural control. _bioRxiv_, ???. DOI: [???][paper_link]*
+> * *Gifford AT, Jastrzębowska M, Singer JJD, Cichy RM. 2024. Investigating representational relationships across visual cortex using relational neural control. _bioRxiv_, ???. DOI: [???][paper_doi]*
 > * *Gifford AT, Cichy RM. 2024. The Neural Encoding Dataset. In preparation. https://github.com/gifale95/NED*
 
 
 
-[paper_link]: !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+[paper_doi]: !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 [rnc_website]: https://www.alegifford.com/projects/rnc/
 [nsd]: https://naturalscenesdataset.org/
 [allen]: https://www.nature.com/articles/s41593-021-00962-x
