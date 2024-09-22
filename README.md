@@ -15,7 +15,7 @@ We developed two RNC variants:
 * **Univariate RNC** controls _univariate_ fMRI responses (i.e., responses averaged over all voxels within an ROI), thus exploring representational relationships for visual information encoded in the strongest activation trends common across all ROI voxels.
 * **Multivariate RNC** controls _multivariate_ fMRI responses (i.e., population response of all voxels within a ROI), thus exploring representational relationships for visual information encoded in the multi-voxel response patterns.
 
-To thoroughly explore the visual space in search for controlling stimuli, RNC is applied to *in-silico* neural responses for thousands of naturalistic images, that is, neural responses generated through encoding models from the [Neural Encoding Dataset (NED)][ned_website]. Specifically, this includes NED-generated *in-silico* fMRI responses for the 73,000 [Natural Scenes Dataset][nsd] ([Allen et al., 2022][allen]) images, the 50,000 [ImageNet 2012 Challenge][imagenet] ([Russakovsky et al., 2015][russakovsky]) images, or the 26,107 [THINGS Database][things] ([Hebart et al., 2019][hebart]) images.
+To thoroughly explore the visual space in search for controlling stimuli, RNC is applied to in silico neural responses for thousands of naturalistic images, that is, neural responses generated through encoding models from the [Neural Encoding Dataset (NED)][ned_website]. Specifically, this includes NED-generated in silico fMRI responses for the 73,000 [Natural Scenes Dataset][nsd] ([Allen et al., 2022][allen]) images, the 50,000 [ImageNet 2012 Challenge][imagenet] ([Russakovsky et al., 2015][russakovsky]) images, or the 26,107 [THINGS Database][things] ([Hebart et al., 2019][hebart]) images.
 
 For any question regarding this code, the project data, or RNC in general, you can get in touch with Ale (alessandro.gifford@gmail.com).
 
@@ -29,13 +29,13 @@ We created interactive tutorials where you can lear how to use univariate and an
 
 ## 📦 Code description
 
-* **00_synthesize_fmri_responses:** Generate _in-silico_ fMRI responses for naturalistic images, using trained encoding models from the Neural Encoding Dataset.
-* **01_in_silico_fmri_encoding_accuracy:** Compute the encoding accuracy and perform a noise analysis on the _in-silico_ fMRI responses.
-* **02_univariate_rnc:** Apply univariate RNC on the _in-silico_ fMRI responses.
-* **03_generative_univariate_rnc:** Apply generative univariate RNC on  _in-silico_ fMRI responses.
-* **04_multivariate_rnc:** Apply multivariate RNC on the _in-silico_ fMRI responses.
-* **05_multivariate_rnc_retinotopy:** Perform the retinotopy analysis on the _in-silico_ fMRI resposnes for the V1 vs. V4 multivariate RNC controlling images.
-* **06_in_vivo_validation:** Analyze the _in-vivo_ fMRI responses for the V1 vs. V4 univariate and multivariate RNC controlling images.
+* **00_synthesize_fmri_responses:** Generate in silico fMRI responses for naturalistic images, using trained encoding models from the Neural Encoding Dataset.
+* **01_in_silico_fmri_encoding_accuracy:** Compute the encoding accuracy and perform a noise analysis on the in silico fMRI responses.
+* **02_univariate_rnc:** Apply univariate RNC on the in silico fMRI responses.
+* **03_generative_univariate_rnc:** Apply generative univariate RNC on  in silico fMRI responses.
+* **04_multivariate_rnc:** Apply multivariate RNC on the in silico fMRI responses.
+* **05_multivariate_rnc_retinotopy:** Perform the retinotopy analysis on the in silico fMRI resposnes for the V1 vs. V4 multivariate RNC controlling images.
+* **06_in_vivo_validation:** Analyze the in vivo fMRI responses for the V1 vs. V4 univariate and multivariate RNC controlling images.
 
 
 
@@ -51,7 +51,7 @@ To run the code you will need to download the following:
 
 * THINGS database images (https://things-initiative.org/).
 
-* The in-vivo fMRI responses for the controlling images (https://openneuro.org/datasets/ds005503).
+* The in vivo fMRI responses for the controlling images (https://openneuro.org/datasets/ds005503).
 
 
 
