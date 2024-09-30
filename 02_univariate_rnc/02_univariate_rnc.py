@@ -181,7 +181,7 @@ low_1_high_2 = np.zeros((roi_sum.shape), dtype=np.float32)
 
 # Univariate response score margin used to constrain the selection of the
 # control images
-margin = 0.045
+margin = 0.04
 
 for r in range(len(r1)):
 
