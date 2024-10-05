@@ -23,7 +23,7 @@ import numpy as np
 import nibabel as nib
 from tqdm import tqdm
 from nilearn.plotting import plot_glass_brain
-from nsdcode.nsd_mapdata import NSDmapdata
+from nsdcode.nsd_mapdata import NSDmapdata # https://github.com/cvnlab/nsdcode
 
 parser = argparse.ArgumentParser()
 parser.add_argument('--all_subjects', type=list, default=[1, 2, 3, 4, 5, 6, 7, 8])
