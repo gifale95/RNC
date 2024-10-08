@@ -8,7 +8,7 @@ Alessandro T. Gifford, Maya A. Jastrzębowska, Johannes J.D. Singer, Radoslaw M.
 
 ## 📖 Theoretical motivation
 
-Seeing is underpinned by a complex interconnected network of multiple brain regions of interest (ROIs) jointly representing visual information. However, the representational content of each ROI is typically studied in isolation, and using limited sets of experimenter-picked stimuli. Here, we addressed this by developing [Relational Neural Control (RNC)][rnc_website]. RNC generates and explores in silico functional magnetic resonance imaging (fMRI) responses for large amounts of images, finding controlling images that align or disentangle responses across areas, thus indicating their shared or unique representational content.
+Seeing is underpinned by a complex interconnected network of multiple brain regions of interest (ROIs) jointly representing visual information. However, the representational content of each ROI is typically studied in isolation, and using limited sets of experimenter-picked stimuli. Here, we addressed this by developing [Relational Neural Control (RNC)][rnc_website]. RNC generates and explores in silico functional magnetic resonance imaging (fMRI) responses for large amounts of images, finding controlling images that align or disentangle responses across ROIs, thus indicating their shared or unique representational content.
 
 We developed two RNC variants:
 
