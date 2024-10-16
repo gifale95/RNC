@@ -2,9 +2,9 @@
 accuracies for areas V1, V2, V3 and V4, and compute stats on them. The encoding
 accuracie are calculated using the 515 test images not used for model training.
 
-This code additionally compares the noise of the in-silico fMRI responses (i.e.,
-synthetic fMRI responses generated from encoding models) with the noise of the
-in-vivo (i.e., target) responses from the NSD experiment, by comparing how
+This code additionally compares the noise of the in silico fMRI responses
+(i.e., the fMRI responses generated from encoding models) with the noise of the
+in vivo (i.e., target) responses from the NSD experiment, by comparing how
 much variance can these two data types explain for a third, independent split of
 NSD responses.
 
@@ -41,7 +41,7 @@ Parameters
 ----------
 all_subjects : list of int
 	List of all subjects. These are the 8 (NSD) subjects for which there are
-	synthetic fMRI responses.
+	in silico fMRI responses.
 rois : list of str
 	List of used ROIs.
 n_iter : int
@@ -90,7 +90,7 @@ ned_object = NED(args.ned_dir)
 
 
 # =============================================================================
-# Load the synthetic test data
+# Load the in silico fMRI test responses
 # =============================================================================
 explained_variance = {}
 explained_variance_gt1tr_synt = {}
@@ -100,13 +100,13 @@ explained_variance_gt1tr_gt2tr = {}
 for s in tqdm(args.all_subjects, leave=False):
 	for r in args.rois:
 
-		# Load the synthetic fMRI responses
-		data_dir = os.path.join(args.project_dir, 'synthetic_fmri_responses',
-			'imageset-nsd', 'synthetic_fmri_responses_sub-'+format(s, '02')+
-                        '_roi-'+r+'.h5')
-		synthetic_fmri = h5py.File(data_dir).get('synthetic_fmri_responses')
+		# Load the in silico fMRI responses
+		data_dir = os.path.join(args.project_dir, 'insilico_fmri_responses',
+			'imageset-nsd', 'insilico_fmri_responses_sub-'+format(s, '02')+
+			'_roi-'+r+'.h5')
+		insilico_fmri = h5py.File(data_dir).get('insilico_fmri_responses')
 
-		# Load the synthetic fMRI responses metadata
+		# Load the in silico fMRI responses metadata
 		metadata = ned_object.get_metadata(
 			modality='fmri',
 			train_dataset='nsd',
@@ -115,10 +115,10 @@ for s in tqdm(args.all_subjects, leave=False):
 			roi=r
 			)
 
-		# Select the synthetic fMRI test responses
+		# Select the in silico fMRI test responses
 		test_img_num = metadata['encoding_models']\
 			['train_val_test_nsd_image_splits']['test_img_num']
-		synthetic_fmri = synthetic_fmri[test_img_num]
+		insilico_fmri = insilico_fmri[test_img_num]
 
 
 # =============================================================================
@@ -134,8 +134,8 @@ for s in tqdm(args.all_subjects, leave=False):
 
 		# target fMRI of shape:
 		# (515 Test images x 3 Repetitions x N Voxels)
-		gt_fmri = np.zeros((synthetic_fmri.shape[0], 3,
-			synthetic_fmri.shape[1]), dtype=np.float32)
+		gt_fmri = np.zeros((insilico_fmri.shape[0], 3,
+			insilico_fmri.shape[1]), dtype=np.float32)
 		for i, img in enumerate(test_img_num):
 			idx = np.where(betas_dict['img_presentation_order'] == img)[0]
 			gt_fmri[i] = betas_dict['betas'][idx]
@@ -143,17 +143,17 @@ for s in tqdm(args.all_subjects, leave=False):
 
 
 # =============================================================================
-# Compute the synthetic fMRI responses encoding accuracy
+# Compute the in silico fMRI responses encoding accuracy
 # =============================================================================
-		# Correlate the synthetic and ground truth test data
-		correlation = np.zeros(synthetic_fmri.shape[1])
+		# Correlate the insilico and ground truth test fMRI responses
+		correlation = np.zeros(insilico_fmri.shape[1])
 		for v in range(len(correlation)):
 			correlation[v] = pearsonr(np.mean(gt_fmri[:,:,v], 1),
-				synthetic_fmri[:,v])[0]
+				insilico_fmri[:,v])[0]
 
 		# Convert the ncsnr to noise ceiling
 		ncsnr = metadata['fmri']['ncsnr']
-		norm_term = (len(synthetic_fmri) / 3) / len(synthetic_fmri)
+		norm_term = (len(insilico_fmri) / 3) / len(insilico_fmri)
 		noise_ceil = (ncsnr ** 2) / ((ncsnr ** 2) + norm_term)
 
 		# Set negative correlation values to 0, so to keep the
@@ -181,18 +181,18 @@ for s in tqdm(args.all_subjects, leave=False):
 
 
 # =============================================================================
-# Correlate synthetic and target fMRI for the noise analysis
+# Correlate in silico and target fMRI for the noise analysis
 # =============================================================================
-		# Correlate target fMRI single trials with other single trials, and with
-		# synthetic fRMI responses
+		# Correlate target fMRI single trials with other single trials, and
+		# with in silico fRMI responses
 		comparisons = [[0, 1, 2], [1, 2, 0], [2, 0, 1]]
-		corr_gt1tr_synt = np.zeros((len(comparisons), synthetic_fmri.shape[1]))
+		corr_gt1tr_synt = np.zeros((len(comparisons), insilico_fmri.shape[1]))
 		corr_gt1tr_gt1tr = np.zeros((len(comparisons), 2,
-			synthetic_fmri.shape[1]))
+			insilico_fmri.shape[1]))
 		for c, comp in enumerate(comparisons):
-			for v in range(synthetic_fmri.shape[1]):
+			for v in range(insilico_fmri.shape[1]):
 				corr_gt1tr_synt[c,v] = pearsonr(gt_fmri[:,comp[0],v],
-					synthetic_fmri[:,v])[0]
+					insilico_fmri[:,v])[0]
 				corr_gt1tr_gt1tr[c,0,v] = pearsonr(gt_fmri[:,comp[0],v],
 					gt_fmri[:,comp[1],v])[0]
 				corr_gt1tr_gt1tr[c,1,v] = pearsonr(gt_fmri[:,comp[0],v],
@@ -200,9 +200,9 @@ for s in tqdm(args.all_subjects, leave=False):
 
 		# Correlate target fMRI single trials with the average of the two
 		# two other trials
-		corr_gt1tr_gt2tr = np.zeros((len(comparisons), synthetic_fmri.shape[1]))
+		corr_gt1tr_gt2tr = np.zeros((len(comparisons), insilico_fmri.shape[1]))
 		for c, comp in enumerate(comparisons):
-			for v in range(synthetic_fmri.shape[1]):
+			for v in range(insilico_fmri.shape[1]):
 				corr_gt1tr_gt2tr[c,v] = pearsonr(gt_fmri[:,comp[0],v],
 					np.mean(gt_fmri[:,comp[1:],v], 1))[0]
 
@@ -212,7 +212,7 @@ for s in tqdm(args.all_subjects, leave=False):
 # =============================================================================
 		# Convert the ncsnr to noise ceiling
 		ncsnr = metadata['fmri']['ncsnr']
-		norm_term = (len(synthetic_fmri) / 1) / len(synthetic_fmri)
+		norm_term = (len(insilico_fmri) / 1) / len(insilico_fmri)
 		noise_ceil = (ncsnr ** 2) / ((ncsnr ** 2) + norm_term)
 
 		# Set negative correlation values to 0, so to keep the
@@ -251,7 +251,7 @@ for s in tqdm(args.all_subjects, leave=False):
 		explained_variance_gt1tr_gt2tr['s'+str(s)+'_'+r] = \
 			np.mean(expl_var_gt1tr_gt2tr)
 
-		del metadata, gt_fmri, synthetic_fmri
+		del metadata, gt_fmri, insilico_fmri
 
 
 # =============================================================================
@@ -371,4 +371,3 @@ if os.path.isdir(save_dir) == False:
 file_name = 'encoding_accuracy.npy'
 
 np.save(os.path.join(save_dir, file_name), results)
-

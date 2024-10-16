@@ -1,4 +1,4 @@
-"""Combine the synthetic fMRI RSMs across partitions, and merge them across all
+"""Combine the in silico fMRI RSMs across partitions, and merge them across all
 subjects.
 
 This code is available at:
@@ -8,7 +8,7 @@ Parameters
 ----------
 all_subjects : list of int
 	List of all subjects. These are the 8 (NSD) subjects for which there are
-	synthetic fMRI responses.
+	in silico fMRI responses.
 roi : str
 	Used ROI. Possible choices are 'V1', 'V3', 'V2', 'hV4'.
 imageset : str
@@ -41,7 +41,7 @@ for key, val in vars(args).items():
 
 
 # =============================================================================
-# Combine the synthetic fMRI RSMs across partitions, and merge them across all
+# Combine the in silico fMRI RSMs across partitions, and merge them across all
 # subjects
 # =============================================================================
 # Get the image conditions number
@@ -60,7 +60,7 @@ idx_lower_tr = np.tril_indices(len(img_cond), -1)
 
 for s, sub in enumerate(args.all_subjects):
 
-	# Combine the synthetic fMRI RSMs across partitions
+	# Combine the in silico fMRI RSMs across partitions
 	data_dir = os.path.join(args.project_dir, args.project_dir,
 		'multivariate_rnc', 'rsms', 'imageset-'+args.imageset)
 	for split in range(args.total_rsm_splits):

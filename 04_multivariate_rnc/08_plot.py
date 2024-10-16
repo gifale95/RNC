@@ -7,7 +7,7 @@ Parameters
 ----------
 all_subjects : list of int
 	List of all subjects. These are the 8 (NSD) subjects for which there are
-	synthetic fMRI responses.
+	in silico fMRI responses.
 roi_pair : list
 	List of ROI pairs for which to plot the results.
 control_conditions : list

@@ -1,4 +1,4 @@
-"""Create RSMs using the synthetic fMRI responses for the aligning and
+"""Create RSMs using the in silico fMRI responses for the aligning and
 disentangling RNC images.
 
 For the aligning images, additionally compute the average RSM correlation
@@ -14,7 +14,7 @@ Parameters
 ----------
 all_subjects : list of int
 	List of all subjects. These are the 8 (NSD) subjects for which there are
-	synthetic fMRI responses.
+	in silico fMRI responses.
 ncsnr_threshold : float
 	Lower bound ncsnr threshold of the kept voxels: only voxels above this
 	threshold are used.
@@ -52,7 +52,7 @@ parser.add_argument('--control_condition', type=str, default='align')
 parser.add_argument('--n_iter', type=int, default=100000)
 parser.add_argument('--project_dir', default='../relational_neural_control/', type=str)
 parser.add_argument('--ned_dir', default='../neural_encoding_dataset/', type=str)
-8args = parser.parse_args()
+args = parser.parse_args()
 
 print('>>> Create controlling images RSMs <<<')
 print('\nInput parameters:')
@@ -115,12 +115,12 @@ for s, sub in tqdm(enumerate(args.all_subjects)):
 	ned_object = NED(args.ned_dir)
 
 	# V1
-	# Load the synthetic fMRI responses
-	data_dir = os.path.join(args.project_dir, 'synthetic_fmri_responses',
-		'imageset-nsd', 'synthetic_fmri_responses_sub-'+format(sub, '02')+
+	# Load the in silico fMRI responses
+	data_dir = os.path.join(args.project_dir, 'insilico_fmri_responses',
+		'imageset-nsd', 'insilico_fmri_responses_sub-'+format(sub, '02')+
 		'_roi-V1.h5')
-	fmri_v1 = h5py.File(data_dir).get('synthetic_fmri_responses')
-	# Load the synthetic fMRI responses metadata
+	fmri_v1 = h5py.File(data_dir).get('insilico_fmri_responses')
+	# Load the in silico fMRI responses metadata
 	metadata_v1 = ned_object.get_metadata(
 		modality='fmri',
 		train_dataset='nsd',
@@ -130,12 +130,12 @@ for s, sub in tqdm(enumerate(args.all_subjects)):
 		)
 
 	# V4
-	# Load the synthetic fMRI responses
-	data_dir = os.path.join(args.project_dir, 'synthetic_fmri_responses',
-		'imageset-nsd', 'synthetic_fmri_responses_sub-'+format(sub, '02')+
+	# Load the in silico fMRI responses
+	data_dir = os.path.join(args.project_dir, 'insilico_fmri_responses',
+		'imageset-nsd', 'insilico_fmri_responses_sub-'+format(sub, '02')+
 		'_roi-hV4.h5')
-	fmri_v4 = h5py.File(data_dir).get('synthetic_fmri_responses')
-	# Load the synthetic fMRI responses metadata
+	fmri_v4 = h5py.File(data_dir).get('insilico_fmri_responses')
+	# Load the in silico fMRI responses metadata
 	metadata_v4 = ned_object.get_metadata(
 		modality='fmri',
 		train_dataset='nsd',

@@ -29,7 +29,7 @@ We created interactive tutorials where you can learn how to use univariate and a
 
 ## 📦 Code description
 
-* **00_synthesize_fmri_responses:** Generate in silico fMRI responses for naturalistic images, using trained encoding models from the Neural Encoding Dataset.
+* **00_generate_insilico_fmri_responses:** Generate in silico fMRI responses for naturalistic images, using trained encoding models from the Neural Encoding Dataset.
 * **01_in_silico_fmri_encoding_accuracy:** Compute the encoding accuracy and perform a noise analysis on the in silico fMRI responses.
 * **02_univariate_rnc:** Apply univariate RNC on the in silico fMRI responses.
 * **03_generative_univariate_rnc:** Apply generative univariate RNC on  in silico fMRI responses.

@@ -1,14 +1,15 @@
-"""For each ROI, get the synthetic fMRI responses for a randomly selected batch
+"""For each ROI, get the in silico fMRI responses for a randomly selected batch
 of 25 images (out of all images from the chosen image set), average the
 responses across all voxels within the ROI (obtaining the ROI's univariate
-responses), and then average the univariate responses across the 25 images. This
-will result in one score indicating the mean synthetic univariate fMRI response
-for that image batch.
+responses), and then average the univariate responses across the 25 images.
+This will result in one score indicating the mean in silico univariate fMRI
+response for that image batch.
 
 Repeating this step 1 million times will create the univariate RNC null 
 distribution, from which the 25 images from the batch with score closest to the
-distribution's mean are selected. The synthetic fMRI univariate response score
-averaged across these 25 images provides the ROI's univariate response baseline.
+distribution's mean are selected. The in silico fMRI univariate response score
+averaged across these 25 images provides the ROI's univariate response
+baseline.
 
 This code is available at:
 https://github.com/gifale95/RNC/blob/main/02_univariate_rnc/01_baseline.py
@@ -17,9 +18,9 @@ Parameters
 ----------
 all_subjects : list of int
 	List of all subjects. These are the 8 (NSD) subjects for which there are
-	synthetic fMRI responses.
+	in silico fMRI responses.
 cv : int
-	If '1' the synthetic univariate fMRI responses of one subject are left out
+	If '1' the in silico univariate fMRI responses of one subject are left out
 	for cross-validation, if '0' the univariate responses of all subjects are
 	used.
 cv_subject : int
@@ -88,7 +89,7 @@ ned_object = NED(args.ned_dir)
 # =============================================================================
 # Sum the ROI data across voxels
 # =============================================================================
-# Synthetic fMRI univariate responses array of shape:
+# In silico fMRI univariate responses array of shape:
 # (Subjects × ROIs × Images)
 if args.imageset == 'nsd':
 	images = 73000
@@ -102,13 +103,13 @@ uni_resp = np.zeros((len(args.all_subjects), len(args.rois), images),
 for s, sub in enumerate(args.all_subjects):
 	for r, roi in enumerate(args.rois):
 
-		# Load the synthetic fMRI responses
-		data_dir = os.path.join(args.project_dir, 'synthetic_fmri_responses',
-			'imageset-'+args.imageset, 'synthetic_fmri_responses_sub-'+
+		# Load the in silico fMRI responses
+		data_dir = os.path.join(args.project_dir, 'insilico_fmri_responses',
+			'imageset-'+args.imageset, 'insilico_fmri_responses_sub-'+
 			format(sub, '02')+'_roi-'+roi+'.h5')
-		betas = h5py.File(data_dir).get('synthetic_fmri_responses')
+		betas = h5py.File(data_dir).get('insilico_fmri_responses')
 
-		# Load the synthetic fMRI responses metadata
+		# Load the in silico fMRI responses metadata
 		metadata = ned_object.get_metadata(
 			modality='fmri',
 			train_dataset='nsd',
@@ -142,8 +143,8 @@ elif args.cv == 1:
 # =============================================================================
 # Create the null distribution
 # =============================================================================
-# If cross-validating, separate null distributions are created for the synthetic
-# fMRI responses of the train and test subjects.
+# If cross-validating, separate null distributions are created for the in
+# silico fMRI responses of the train and test subjects.
 
 null_distrubition_images = np.zeros((args.null_dist_samples, args.n_images),
 	dtype=np.int32)

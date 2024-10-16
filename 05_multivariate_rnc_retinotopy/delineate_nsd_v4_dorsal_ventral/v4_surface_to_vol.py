@@ -10,7 +10,7 @@ Parameters
 ----------
 all_subjects : list of int
 	List of all subjects. These are the 8 (NSD) subjects for which there are
-	synthetic fMRI responses.
+	in silico fMRI responses.
 nsd_dir : str
 	Directory of the NSD.
 	https://naturalscenesdataset.org/

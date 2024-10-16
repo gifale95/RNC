@@ -1,5 +1,5 @@
-"""This code tests whether the controlling images found using the synthetic
-fMRI responses of the train subjects generalize to the synthetic fMRI responses
+"""This code tests whether the controlling images found using the in silico
+fMRI responses of the train subjects generalize to the in silico fMRI responses
 for the left-out subject. Stats include confidence intervals and significance.
 
 The code additionally compares the multivariate RNC scores of pairwise ROI
@@ -12,7 +12,7 @@ Parameters
 ----------
 all_subjects : list of int
 	List of all subjects. These are the 8 (NSD) subjects for which there are
-	synthetic fMRI responses.
+	in silico fMRI responses.
 cv : int
 	'1' if univariate RNC is cross-validated across subjects, '0' otherwise.
 roi_pair : int

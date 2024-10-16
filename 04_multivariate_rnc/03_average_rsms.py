@@ -1,4 +1,4 @@
-"""Average the synthetic RSMs across subjects.
+"""Average the in silico fMRI RSMs across subjects.
 
 If cross-validation is used, the RSMs are averaged across N-1 (train) subjects.
 Multivariate RNC will later be applied on these averaged RSMs, and the resulting
@@ -15,7 +15,7 @@ Parameters
 ----------
 all_subjects : list of int
 	List of all subjects. These are the 8 (NSD) subjects for which there are
-	synthetic fMRI responses.
+	in silico fMRI responses.
 cv : int
 	If '1' the RSM of one subject is left out for cross-validation, and the RSMs
 	are averaged across the remaining N-1 subjects. If '0' the RSMs are averaged

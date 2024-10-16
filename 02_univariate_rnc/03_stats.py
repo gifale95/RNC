@@ -1,5 +1,5 @@
-"""This code tests whether the controlling images found using the synthetic
-fMRI responses of the train subjects generalize to the synthetic fMRI responses
+"""This code tests whether the controlling images found using the in silico
+fMRI responses of the train subjects generalize to the in silico fMRI responses
 for the left-out subject. Stats include confidence intervals and significance.
 
 The code additionally compares the univariate RNC scores of pairwise ROI
@@ -12,7 +12,7 @@ Parameters
 ----------
 all_subjects : list of int
 	List of all subjects. These are the 8 (NSD) subjects for which there are
-	synthetic fMRI responses.
+	in silico fMRI responses.
 cv : int
 	'1' if univariate RNC is cross-validated across subjects, '0' otherwise.
 rois : list of str
@@ -173,13 +173,13 @@ elif args.cv == 1:
 # =============================================================================
 # Validate the neural control conditions across subjects
 # =============================================================================
-# Get the test subjects synthetic univariate fMRI responses for the controlling
+# Get the test subjects in silico univariate fMRI responses for the controlling
 # images from the four neural control conditions, as well as for the baseline
 # images.
 
 if args.cv == 1:
 
-	# Synthetic univariate fMRI responses arrays of shape:
+	# In silico univariate fMRI responses arrays of shape:
 	# (Subjects x ROI comparisons x ROI pair per comparison x Target images)
 	high_1_high_2_resp = np.zeros((len(args.all_subjects), len(r1), 2,
 		args.n_images))
@@ -216,7 +216,7 @@ if args.cv == 1:
 # =============================================================================
 # Compute the 95% confidence intervals (only for cv==1)
 # =============================================================================
-# Compute the confidence intervals of the cross-validated synthetic univariate
+# Compute the confidence intervals of the cross-validated in silico univariate
 # fMRI responses for the controlling images (averaged across the N best
 # controlling images), across the 8 (NSD) subjects.
 
@@ -294,9 +294,9 @@ if args.cv == 1:
 # =============================================================================
 # Compute the significance (only for cv==1)
 # =============================================================================
-# Compute the significance between the synthetic univariate fMRI responses for
+# Compute the significance between the in silico univariate fMRI responses for
 # the neural control images (averaged across the N best controlling images), and
-# the synthetic univariate fMRI univariate responses for the baseline images,
+# the in silico univariate fMRI univariate responses for the baseline images,
 # across the 8 (NSD) subjects.
 
 if args.cv == 1:
@@ -365,8 +365,8 @@ if args.cv == 1:
 # =============================================================================
 # Correlate the ROI responses across all images
 # =============================================================================
-# This will provide the correlation scores between the synthetic fMRI univariate
-# responses between each pariwise ROI comparison.
+# This will provide the correlation scores between the in silico fMRI
+# univariate responses between each pariwise ROI comparison.
 
 if args.cv == 1:
 

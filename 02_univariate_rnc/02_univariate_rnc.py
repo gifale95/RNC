@@ -1,16 +1,16 @@
 """For each pairwise area combination (V1 vs. V2, V1 vs. V3, V1 vs. V4,
 V2 vs. V3, V2 vs. V4, V3 vs. V4) univariate RNC searches, across stimuli from
-the chosen imageset, for images that align or disentangle the synthetic
+the chosen imageset, for images that align or disentangle the in silico
 univariate fMRI responses for the two ROIs being compared, thus highlighting
 shared and unique representational content, respectively.
 
-The synthetic fMRI responses for all images from the chosen image set are
-averaged across voxels, thus obtaining univariate responses. The synthetic
+The in silico fMRI responses for all images from the chosen image set are
+averaged across voxels, thus obtaining univariate responses. The in silico
 univariate fMRI responses of the two ROIs are then either summed (alignment) or
 subtracted (disentanglement), and the resulting sum/difference scores ranked.
 
 Finally, the 25 controlling images leading to highest and lowest scores, while
-at the same time resulting in synthetic univariate fMRI responses higher (or
+at the same time resulting in in silico univariate fMRI responses higher (or
 lower, depending on the control condition) than the ROIs' univariate response
 baselines by a margin of at least 0.05, are kept.
 
@@ -23,7 +23,7 @@ control conditions in which both areas have disentangled univariate responses
 (i.e. images that drove the responses of one area while suppressing the
 responses of the other area, and vice versa).
 
-The synthetic fMRI responses come from the Neural Encoding Dataset (NED):
+The in silico fMRI responses come from the Neural Encoding Dataset (NED):
 https://github.com/gifale95/NED
 
 This code is available at:
@@ -33,7 +33,7 @@ Parameters
 ----------
 all_subjects : list of int
 	List of all subjects. These are the 8 (NSD) subjects for which there are
-	synthetic fMRI responses.
+	in silico fMRI responses.
 cv : int
 	If '1' univariate RNC leaves the data of one subject out for
 	cross-validation, if '0' univariate RNC uses the data of all subjects.
@@ -88,7 +88,7 @@ ned_object = NED(args.ned_dir)
 # =============================================================================
 # Sum the ROI data across voxels
 # =============================================================================
-# Synthetic fMRI univariate responses array of shape:
+# In silico fMRI univariate responses array of shape:
 # (Subjects × ROIs × Images)
 if args.imageset == 'nsd':
 	images = 73000
@@ -102,13 +102,13 @@ uni_resp = np.zeros((len(args.all_subjects), len(args.rois), images),
 for s, sub in enumerate(args.all_subjects):
 	for r, roi in enumerate(args.rois):
 
-		# Load the synthetic fMRI responses
-		data_dir = os.path.join(args.project_dir, 'synthetic_fmri_responses',
-			'imageset-'+args.imageset, 'synthetic_fmri_responses_sub-'+
+		# Load the in silico fMRI responses
+		data_dir = os.path.join(args.project_dir, 'insilico_fmri_responses',
+			'imageset-'+args.imageset, 'insilico_fmri_responses_sub-'+
 			format(sub, '02')+'_roi-'+roi+'.h5')
-		betas = h5py.File(data_dir).get('synthetic_fmri_responses')
+		betas = h5py.File(data_dir).get('insilico_fmri_responses')
 
-		# Load the synthetic fMRI responses metadata
+		# Load the in silico fMRI responses metadata
 		metadata = ned_object.get_metadata(
 			modality='fmri',
 			train_dataset='nsd',
@@ -185,9 +185,9 @@ margin = 0.04
 
 for r in range(len(r1)):
 
-	# Select the top N images that align the synthetic univariate fMRI responses
-	# of the two ROIs (i.e., that lead both ROIs having either high or low
-	# univariate responses).
+	# Select the top N images that align the in silico univariate fMRI
+	# responses of the two ROIs (i.e., that lead both ROIs having either high
+	# or low univariate responses).
 	# 1st ranking: images with high univariate responses for both ROIs
 	resp_roi_1 = uni_resp_mean[r1[r]]
 	resp_roi_2 = uni_resp_mean[r2[r]]
@@ -212,7 +212,7 @@ for r in range(len(r1)):
 	low_1_low_2[r,idx_bad_roi_1] = np.nan
 	low_1_low_2[r,idx_bad_roi_2] = np.nan
 
-	# Select the top N images that differentiate the synthetic univariate fMRI
+	# Select the top N images that differentiate the in silico univariate fMRI
 	# responses of the two ROIs (i.e., that lead one ROI having high
 	# responses and the other ROI low responses, or vice versa).
 	# 3rd ranking: images with high univariate responses for ROI 1 and low

@@ -1,6 +1,6 @@
-"""Create the synthetic fMRI RSMs that will be later used by the multivariate
-RNC algorithm. Each RSM consists in the pairwise comparisons for all images from
-the chosen imageset.
+"""Create the in silico fMRI RSMs that will be later used by the multivariate
+RNC algorithm. Each RSM consists in the pairwise comparisons for all images
+from the chosen imageset.
 
 This code is available at:
 https://github.com/gifale95/RNC/blob/main/04_multivariate_rnc/01_create_rsms.py
@@ -62,15 +62,15 @@ ned_object = NED(args.ned_dir)
 
 
 # =============================================================================
-# Load the synthetic fMRI responses
+# Load the in silico fMRI responses
 # =============================================================================
-# Load the synthetic fMRI responses
-data_dir = os.path.join(args.project_dir, 'synthetic_fmri_responses',
-	'imageset-'+args.imageset, 'synthetic_fmri_responses_sub-'+
+# Load the in silico fMRI responses
+data_dir = os.path.join(args.project_dir, 'insilico_fmri_responses',
+	'imageset-'+args.imageset, 'insilico_fmri_responses_sub-'+
 	format(args.sub, '02')+'_roi-'+args.roi+'.h5')
-betas = h5py.File(data_dir).get('synthetic_fmri_responses')
+betas = h5py.File(data_dir).get('insilico_fmri_responses')
 
-# Load the synthetic fMRI responses metadata
+# Load the in silico fMRI responses metadata
 metadata = ned_object.get_metadata(
 	modality='fmri',
 	train_dataset='nsd',
@@ -86,7 +86,7 @@ betas = betas[:,best_voxels]
 
 
 # =============================================================================
-# Create the synthetic fMRI responses RSM
+# Create the in silico fMRI responses RSM
 # =============================================================================
 # Establish which RSM partition to create
 all_img_cond = np.arange(len(betas))

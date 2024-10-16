@@ -16,7 +16,7 @@ https://github.com/gifale95/RNC/blob/main/04_multivariate_rnc/04_baseline.py
 Parameters
 ----------
 cv : int
-	If '1' the synthetic fMRI RSMs of one subject are left out for
+	If '1' the in silico fMRI RSMs of one subject are left out for
 	cross-validation, if '0' use the RSMs averaged across all subjects.
 cv_subject : int
 	If 'cv==0' the left-out subject during cross-validation, out of all 8 (NSD)
@@ -101,8 +101,8 @@ elif args.cv == 1:
 # =============================================================================
 # Create the null distribution
 # =============================================================================
-# If cross-validating, separate null distributions are created for the synthetic
-# fMRI responses of the train and test subjects.
+# If cross-validating, separate null distributions are created for the in
+# silico fMRI responses of the train and test subjects.
 
 if args.cv == 0:
 	null_distribution = np.zeros(args.null_dist_samples)

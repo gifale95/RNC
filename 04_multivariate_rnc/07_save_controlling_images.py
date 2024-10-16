@@ -100,7 +100,7 @@ elif args.imageset == 'imagenet-val':
 
 elif args.imageset == 'things':
 	ned_object = NED(args.ned_dir)
-	_, metadata = ned_object.load_synthetic_neural_responses(
+	_, metadata = ned_object.load_insilico_neural_responses(
 		modality='fmri',
 		train_dataset='nsd',
 		model='fwrf',

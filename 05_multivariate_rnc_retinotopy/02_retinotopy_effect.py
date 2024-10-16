@@ -17,7 +17,7 @@ Parameters
 ----------
 all_subjects : list of int
 	List of all subjects. These are the 8 (NSD) subjects for which there are
-	synthetic fMRI responses.
+	in silico fMRI responses.
 roi : str
 	Whether to test 'V1' or 'hV4'.
 ncsnr_threshold : float
@@ -169,13 +169,13 @@ for s, sub in tqdm(enumerate(args.all_subjects)):
 # =============================================================================
 	ned_object = NED(args.ned_dir)
 
-	# Load the synthetic fMRI responses
-	data_dir = os.path.join(args.project_dir, 'synthetic_fmri_responses',
-		'imageset-nsd', 'synthetic_fmri_responses_sub-'+format(sub, '02')+
+	# Load the in silico fMRI responses
+	data_dir = os.path.join(args.project_dir, 'insilico_fmri_responses',
+		'imageset-nsd', 'insilico_fmri_responses_sub-'+format(sub, '02')+
 		'_roi-'+args.roi+'.h5')
-	fmri = h5py.File(data_dir).get('synthetic_fmri_responses')
+	fmri = h5py.File(data_dir).get('insilico_fmri_responses')
 
-	# Load the synthetic fMRI responses metadata
+	# Load the in silico fMRI responses metadata
 	metadata = ned_object.get_metadata(
 		modality='fmri',
 		train_dataset='nsd',

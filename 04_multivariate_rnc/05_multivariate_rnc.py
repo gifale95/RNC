@@ -3,7 +3,7 @@ V2 vs. V3, V2 vs. V4, V3 vs. V4) multivariate RNC uses genetic optimization and
 representational similarity analysis (RSA) to search, across stimuli from the
 chosen imageset, for a batch of images that aligns (i.e., images leading to a
 high RSA correlation score) and disentangles (i.e., images leading to a low
-absolute RSA correlation score) the synthetic multivariate fMRI responses
+absolute RSA correlation score) the in silico multivariate fMRI responses
 for the two ROIs being compared, thus highlighting shared and unique
 representational content, respectively.
 
@@ -89,7 +89,7 @@ roi_2 = roi_comb_names[args.roi_pair][1]
 
 
 # =============================================================================
-# Load the pre-computed synthetic fMRI RSMs
+# Load the pre-computed in silico fMRI RSMs
 # =============================================================================
 if args.cv == 0:
 	# If not cross-validating, load and use the RSMs averaged across all

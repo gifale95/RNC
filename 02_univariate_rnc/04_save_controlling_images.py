@@ -92,7 +92,7 @@ elif args.imageset == 'imagenet_val':
 elif args.imageset == 'things':
 	# https://github.com/gifale95/NED
 	ned_object = NED(args.ned_dir)
-	_, metadata = ned_object.load_synthetic_neural_responses(
+	_, metadata = ned_object.load_insilico_neural_responses(
 		modality='fmri',
 		train_dataset='nsd',
 		model='fwrf',

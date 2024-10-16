@@ -13,7 +13,7 @@ def load_encoding_models(args, roi):
 	encoding_models : list
 		List containing the trained fwrf encoding models.
 	metadata : dict
-		Synthetic neural responses metadata.
+		In silico neural responses metadata.
 
 	"""
 
@@ -110,9 +110,9 @@ def load_generator(args):
 	return generator
 
 
-def synthesize_fmri(args, encoding_models, metadata, images):
-	"""Use the encoding models to synthesize the fMRI responses for the
-	generated images.
+def generate_insilico_fmri(args, encoding_models, metadata, images):
+	"""Use the encoding models to generate the in silico fMRI responses for the
+	synthesized images.
 
 	Parameters
 	----------
@@ -121,7 +121,7 @@ def synthesize_fmri(args, encoding_models, metadata, images):
 	encoding_models : list
 		List containing the trained fwrf encoding models.
 	metadata : dict
-		Synthetic neural responses metadata.
+		In silico neural responses metadata.
 	images : int
 		Synthesized images. Must be a 4-D numpy array of shape
 		(Batch size x 3 RGB Channels x Width x Height) consisting of integer
@@ -142,7 +142,7 @@ def synthesize_fmri(args, encoding_models, metadata, images):
 	### Initialize NED ###
 	ned_object = NED(args.ned_dir)
 
-	### Synthesize the fMRI image responses ###
+	### Generate the in silico fMRI responses to images ###
 	fmri = []
 	for s in range(len(args.all_subjects)):
 		fmri_sub = ned_object.encode(
@@ -156,8 +156,8 @@ def synthesize_fmri(args, encoding_models, metadata, images):
 		best_voxels = np.where(
 			metadata[s]['fmri']['ncsnr'] > args.ncsnr_threshold)[0]
 		fmri_sub = fmri_sub[:,best_voxels]
-		# Get the univariate responses by averaging the fMRI responses across
-		# voxels
+		# Get the univariate responses by averaging the in silico fMRI
+		# responses across voxels
 		fmri_sub = np.nanmean(fmri_sub, 1)
 		fmri.append(copy(fmri_sub))
 	fmri = np.asarray(fmri)
@@ -169,7 +169,7 @@ def synthesize_fmri(args, encoding_models, metadata, images):
 def score_select(args, fmri_roi_1, fmri_roi_2, image_codes, images,
 	baseline_roi_1, baseline_roi_2):
 	"""Score and rank the generated images based on their neural control
-	magnitude on the synthetic fMRI responses and their complexity.
+	magnitude on the in silico fMRI responses and their complexity.
 
 	Parameters
 	----------

@@ -13,8 +13,8 @@ https://github.com/gifale95/RNC/blob/main/03_generative_univariate_rnc/01_genera
 Parameters
 ----------
 all_subjects : list of int
-	List of all subjects. These are the 8 (NSD) subjects for which there are
-	synthetic fMRI responses.
+	List of all subjects. These are the 8 (NSD) subjects for which the in
+	silico fMRI responses can be generated.
 cv : int
 	If '1' univariate RNC leaves the data of one subject out for
 	cross-validation, if '0' univariate RNC uses the data of all subjects.
@@ -23,8 +23,8 @@ cv_subject : int
 	subjects.
 roi_pair : int
 	Integer indicating the chosen pairwise ROI combination on which to perform
-	multivariate RNC. Possible values are '0' (V1-V2), '1' (V1-V3), '2'
-	(V1-hV4), '3' (V2-V3), '4' (V2-hV4), '5' (V3-hV4).
+	generative univariate RNC. Possible values are '0' (V1-V2), '1' (V1-V3),
+	'2' (V1-hV4), '3' (V2-V3), '4' (V2-hV4), '5' (V3-hV4).
 ncsnr_threshold : float
 	Lower bound ncsnr threshold of the kept voxels: only voxels above this
 	threshold are used.
@@ -85,7 +85,7 @@ from copy import copy
 
 from utils import load_encoding_models
 from utils import load_generator
-from utils import synthesize_fmri
+from utils import generate_insilico_fmri
 from utils import score_select
 from utils import optimize_image_codes
 
@@ -223,7 +223,7 @@ best_scores_train = np.zeros((args.generations))
 best_scores_test = np.zeros((args.generations))
 # Image codes
 best_image_codes = np.zeros((args.generations, image_code_size))
-# Synthetic fMRI responses
+# In silico fMRI responses
 best_fmri_roi_1 = np.zeros((args.generations, len(args.all_subjects)))
 best_fmri_roi_2 = np.zeros((args.generations, len(args.all_subjects)))
 
@@ -267,11 +267,11 @@ for g in tqdm(range(args.generations), leave=False):
 
 
 # =============================================================================
-# Synthesize fMRI responses for the generated images
+# Generate in silico fMRI responses for the synthesized images
 # =============================================================================
-	fmri_roi_1_new = synthesize_fmri(args, encoding_models_roi_1,
+	fmri_roi_1_new = generate_insilico_fmri(args, encoding_models_roi_1,
 		metadata_roi_1, copy(images_new))
-	fmri_roi_2_new = synthesize_fmri(args, encoding_models_roi_2,
+	fmri_roi_2_new = generate_insilico_fmri(args, encoding_models_roi_2,
 		metadata_roi_2, copy(images_new))
 
 
