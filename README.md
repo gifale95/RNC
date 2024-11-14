@@ -21,13 +21,39 @@ For any question regarding this code, the project data, or RNC in general, you c
 
 
 
-## 💻 Tutorials
+## 🚀 RNC tutorials
 
 We created interactive tutorials where you can learn how to use univariate and and multivariate RNC. These tutorials are available on either _Google Colab_ ([univariate RNC][uni_rnc_colab], [multivariate RNC][multi_rnc_colab]) or _Jupyter Notebook_ ([univariate RNC][uni_rnc_jupyter], [multivariate RNC][multi_rnc_jupyter]).
 
 
 
-## 📦 Code description
+## ♻️ Reproducibility
+
+### ⚙️ Installation
+
+To reproduce the paper's results, you can download and run the Python code from this repository. We recommend running the code using an Anaconda environment with the following packages installed:
+
+> [argparse][argparse], [h5py][h5py], [matplotlib][matplotlib], [ned][ned_git], [nibabel][nibabel], [nsdcode][nsdcode], [numpy][numpy], [pandas][pandas], [pillow][pil], [scipy][scipy], [sklearn][sklearn], [statsmodels][statsmodels], [torchvision][torchvision], [tqdm][tqdm]
+
+
+
+### 🧰 Data
+
+To run the code you will need to download the following:
+
+* The Neural Encoding dataset (https://www.alegifford.com/projects/ned/).
+
+* The 73,000 stimulus images from the Natural Scenes Dataset (https://naturalscenesdataset.org/).
+
+* The 50,000 ILSVRC-2012 validation images (https://www.image-net.org/challenges/LSVRC/2012/index.php).
+
+* The 26,107 images from THINGS (https://osf.io/jum2f/).
+
+* The in vivo fMRI responses for the controlling images collected in this project (https://openneuro.org/datasets/ds005503).
+
+
+
+### 📦 Code description
 
 * **00_generate_insilico_fmri_responses:** Generate in silico fMRI responses for naturalistic images, using trained encoding models from the Neural Encoding Dataset.
 * **01_in_silico_fmri_encoding_accuracy:** Compute the encoding accuracy and perform a noise analysis on the in silico fMRI responses.
@@ -36,22 +62,6 @@ We created interactive tutorials where you can learn how to use univariate and a
 * **04_multivariate_rnc:** Apply multivariate RNC on the in silico fMRI responses.
 * **05_multivariate_rnc_retinotopy:** Perform the retinotopy analysis on the in silico fMRI resposnes for the V1 vs. V4 multivariate RNC controlling images.
 * **06_in_vivo_validation:** Analyze the in vivo fMRI responses for the V1 vs. V4 univariate and multivariate RNC controlling images.
-
-
-
-## 🧰 Data
-
-To run the code you will need to download the following:
-
-* Neural Encoding dataset (https://www.alegifford.com/projects/ned/).
-
-* Natural Scenes Dataset (https://naturalscenesdataset.org/).
-
-* ILSVRC-2012 validation images (https://www.image-net.org/challenges/LSVRC/2012/index.php).
-
-* THINGS database images (https://things-initiative.org/).
-
-* The in vivo fMRI responses for the controlling images (https://openneuro.org/datasets/ds005503).
 
 
 
@@ -82,3 +92,19 @@ If you use any of our data or code, please cite:
 [multi_rnc_colab]: https://colab.research.google.com/drive/1bEKCzkjNfM-jzxRj-JX2zxB17XBouw23?usp=sharing
 [uni_rnc_jupyter]: https://github.com/gifale95/RNC/blob/main/tutorials/univariate_rnc_tutorial.ipynb
 [multi_rnc_jupyter]: https://github.com/gifale95/RNC/blob/main/tutorials/multivariate_rnc_tutorial.ipynb
+
+
+[argparse]: https://docs.python.org/3/library/argparse.html
+[h5py]: https://docs.h5py.org/en/stable/
+[matplotlib]: https://matplotlib.org/stable/index.html
+[ned_git]: https://github.com/gifale95/NED
+[nibabel]: https://nipy.org/nibabel/gettingstarted.html
+[nsdcode]: https://github.com/cvnlab/nsdcode
+[numpy]: https://numpy.org/
+[pandas]: https://pandas.pydata.org/
+[pil]: https://pypi.org/project/pillow/
+[scipy]: https://scipy.org/
+[sklearn]: https://scikit-learn.org/stable/#
+[statsmodels]: https://www.statsmodels.org/stable/index.html
+[torchvision]: https://pytorch.org/vision/stable/index.html
+[tqdm]: https://github.com/tqdm/tqdm
