@@ -74,12 +74,12 @@ If you experience problems with the code, please submit an issue!
 ## 📜 Citation
 If you use any of our data or code, please cite:
 
-> * Gifford AT, Jastrzębowska M, Singer JJD, Cichy RM. 2024. In silico discovery of representational relationships across visual cortex. _bioRxiv_, ???. DOI: [???][paper_doi]
+> * Gifford AT, Jastrzębowska M, Singer JJD, Cichy RM. 2024. In silico discovery of representational relationships across visual cortex. _arXiv preprint_, arXiv:2411.10872. DOI: [https://arxiv.org/abs/2411.10872][paper_doi]
 > * Gifford AT, Cichy RM. 2024. The Neural Encoding Dataset. _In preparation_. https://github.com/gifale95/NED
 
 
 
-[paper_doi]: !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+[paper_doi]: https://arxiv.org/abs/2411.10872
 [rnc_website]: https://www.alegifford.com/projects/rnc/
 [nsd]: https://naturalscenesdataset.org/
 [allen]: https://www.nature.com/articles/s41593-021-00962-x
