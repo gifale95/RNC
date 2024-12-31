@@ -247,7 +247,7 @@ for r in range(len(r1)):
 				])
 			img = transform(img)
 		elif args.imageset == 'things':
-			img_dir = os.path.join(args.things_di, 'images',,
+			img_dir = os.path.join(args.things_di, 'images',
 				images[data_dict['baseline_images'][r2[r],i]])
 			img = transform(Image.open(img_dir).convert('RGB'))
 		img_name = 'rnc_baseline_'+args.rois[r2[r]]+'_img-' + format(i+1, '03') + \
