@@ -31,10 +31,17 @@ We created interactive tutorials where you can learn how to use univariate and a
 
 ### ⚙️ Installation
 
-To reproduce the paper's results, you can download and run the Python code from this repository. We recommend running the code using an Anaconda environment with the following packages installed:
+To reproduce the paper's results, you can download and run the Python code from this repository. To run this code, you will first need to install the libraries in the [requirements.txt][requiremenents]. We recommend installing these libraries within a virtual environment (e.g., an [Anaconda][anaconda] environment) using:
 
-> [argparse][argparse], [h5py][h5py], [matplotlib][matplotlib], [ned][ned_git], [nibabel][nibabel], [nsdcode][nsdcode], [numpy][numpy], [pandas][pandas], [pillow][pil], [scipy][scipy], [sklearn][sklearn], [statsmodels][statsmodels], [torchvision][torchvision], [tqdm][tqdm]
+```shell
+pip install -r requirements.txt
+```
 
+You will also need to manually install the [NED][ned_git] library with:
+
+```shell
+pip install -U git+https://github.com/gifale95/NED.git
+```
 
 
 ### 🧰 Data
@@ -92,19 +99,6 @@ If you use any of our data or code, please cite:
 [multi_rnc_colab]: https://colab.research.google.com/drive/1bEKCzkjNfM-jzxRj-JX2zxB17XBouw23?usp=sharing
 [uni_rnc_jupyter]: https://github.com/gifale95/RNC/blob/main/tutorials/univariate_rnc_tutorial.ipynb
 [multi_rnc_jupyter]: https://github.com/gifale95/RNC/blob/main/tutorials/multivariate_rnc_tutorial.ipynb
-
-
-[argparse]: https://docs.python.org/3/library/argparse.html
-[h5py]: https://docs.h5py.org/en/stable/
-[matplotlib]: https://matplotlib.org/stable/index.html
+[requirements]: https://github.com/gifale95/RNC/blob/main/requirements.txt
+[anaconda]: https://docs.conda.io/projects/conda/en/latest/user-guide/tasks/manage-environments.html
 [ned_git]: https://github.com/gifale95/NED
-[nibabel]: https://nipy.org/nibabel/gettingstarted.html
-[nsdcode]: https://github.com/cvnlab/nsdcode
-[numpy]: https://numpy.org/
-[pandas]: https://pandas.pydata.org/
-[pil]: https://pypi.org/project/pillow/
-[scipy]: https://scipy.org/
-[sklearn]: https://scikit-learn.org/stable/#
-[statsmodels]: https://www.statsmodels.org/stable/index.html
-[torchvision]: https://pytorch.org/vision/stable/index.html
-[tqdm]: https://github.com/tqdm/tqdm
