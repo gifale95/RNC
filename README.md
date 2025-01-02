@@ -31,7 +31,7 @@ We created interactive tutorials where you can learn how to use univariate and a
 
 ### ⚙️ Installation
 
-To reproduce the paper's results, you can download and run the Python code from this repository. To run this code, you will first need to install the libraries in the [requirements.txt][requiremenents]. We recommend installing these libraries within a virtual environment (e.g., an [Anaconda][anaconda] environment) using:
+To reproduce the paper's results, you can download and run the Python code from this repository. To run this code, you will first need to install the libraries in the [requirements.txt][requirements]. We recommend installing these libraries within a virtual environment (e.g., an [Anaconda][anaconda] environment) using:
 
 ```shell
 pip install -r requirements.txt
