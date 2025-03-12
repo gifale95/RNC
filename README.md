@@ -15,7 +15,7 @@ We developed two RNC variants:
 * **Univariate RNC** controls _univariate_ fMRI responses (i.e., responses averaged over all voxels within an ROI), thus exploring representational relationships for visual information encoded in the strongest activation trends common across all ROI voxels.
 * **Multivariate RNC** controls _multivariate_ fMRI responses (i.e., population response of all voxels within a ROI), thus exploring representational relationships for visual information encoded in the multi-voxel response patterns.
 
-To thoroughly explore the visual space in search for controlling stimuli, we applied RNC to in silico neural responses for thousands of naturalistic images, that is, neural responses generated through encoding models from the [Neural Encoding Dataset (NED)][ned_website]. Specifically, this includes NED-generated in silico fMRI responses for the 73,000 [Natural Scenes Dataset][nsd] ([Allen et al., 2022][allen]) images, the 50,000 [ImageNet 2012 Challenge][imagenet] ([Russakovsky et al., 2015][russakovsky]) images, or the 26,107 [THINGS Database][things] ([Hebart et al., 2019][hebart]) images.
+To thoroughly explore the visual space in search for controlling stimuli, we applied RNC to in silico neural responses for thousands of naturalistic images, that is, neural responses generated through encoding models from the [Neural Encoding Simulation Toolkit (NEST)][nest_website]. Specifically, this includes NEST-generated in silico fMRI responses for the 73,000 [Natural Scenes Dataset][nsd] ([Allen et al., 2022][allen]) images, the 50,000 [ImageNet 2012 Challenge][imagenet] ([Russakovsky et al., 2015][russakovsky]) images, or the 26,107 [THINGS Database][things] ([Hebart et al., 2019][hebart]) images.
 
 For any question regarding this code, the project data, or RNC in general, you can get in touch with Ale (alessandro.gifford@gmail.com).
 
@@ -37,10 +37,10 @@ To reproduce the paper's results, you can download and run the Python code from 
 pip install -r requirements.txt
 ```
 
-You will also need to manually install the [NED][ned_git] library with:
+You will also need to manually install the [NEST][nest_git] library with:
 
 ```shell
-pip install -U git+https://github.com/gifale95/NED.git
+pip install -U git+https://github.com/gifale95/NEST.git
 ```
 
 
@@ -48,7 +48,7 @@ pip install -U git+https://github.com/gifale95/NED.git
 
 To run the code you will need to download the following:
 
-* The Neural Encoding dataset (https://www.alegifford.com/projects/ned/).
+* The Neural Encoding Simulation Toolkit (https://www.alegifford.com/projects/nest/).
 
 * The 73,000 stimulus images from the Natural Scenes Dataset (https://naturalscenesdataset.org/).
 
@@ -62,7 +62,7 @@ To run the code you will need to download the following:
 
 ### 📦 Code description
 
-* **00_generate_insilico_fmri_responses:** Generate in silico fMRI responses for naturalistic images, using trained encoding models from the Neural Encoding Dataset.
+* **00_generate_insilico_fmri_responses:** Generate in silico fMRI responses for naturalistic images, using trained encoding models from the Neural Encoding Simulation Toolkit.
 * **01_in_silico_fmri_encoding_accuracy:** Compute the encoding accuracy and perform a noise analysis on the in silico fMRI responses.
 * **02_univariate_rnc:** Apply univariate RNC on the in silico fMRI responses.
 * **03_generative_univariate_rnc:** Apply generative univariate RNC on  in silico fMRI responses.
@@ -82,7 +82,7 @@ If you experience problems with the code, please submit an issue!
 If you use any of our data or code, please cite:
 
 > * Gifford AT, Jastrzębowska M, Singer JJD, Cichy RM. 2024. In silico discovery of representational relationships across visual cortex. _arXiv preprint_, arXiv:2411.10872. DOI: [https://doi.org/10.48550/arXiv.2411.10872][paper_doi]
-> * Gifford AT, Cichy RM. 2024. The Neural Encoding Dataset. _In preparation_. https://github.com/gifale95/NED
+> * Gifford AT, Bersch D, Roig G, Cichy RM. 2024. The Neural Encoding Simulation Toolkit. _In preparation_. https://github.com/gifale95/NEST
 
 
 
@@ -90,7 +90,7 @@ If you use any of our data or code, please cite:
 [rnc_website]: https://www.alegifford.com/projects/rnc/
 [nsd]: https://naturalscenesdataset.org/
 [allen]: https://www.nature.com/articles/s41593-021-00962-x
-[ned_website]: https://www.alegifford.com/projects/ned/
+[nest_website]: https://www.alegifford.com/projects/nest/
 [imagenet]: https://www.image-net.org/challenges/LSVRC/2012/index.php
 [russakovsky]: https://link.springer.com/article/10.1007/s11263-015-0816-y
 [things]: https://things-initiative.org/
@@ -101,4 +101,4 @@ If you use any of our data or code, please cite:
 [multi_rnc_jupyter]: https://github.com/gifale95/RNC/blob/main/tutorials/multivariate_rnc_tutorial.ipynb
 [requirements]: https://github.com/gifale95/RNC/blob/main/requirements.txt
 [anaconda]: https://docs.conda.io/projects/conda/en/latest/user-guide/tasks/manage-environments.html
-[ned_git]: https://github.com/gifale95/NED
+[nest_git]: https://github.com/gifale95/NEST
