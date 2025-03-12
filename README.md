@@ -37,7 +37,7 @@ To reproduce the paper's results, you can download and run the Python code from 
 pip install -r requirements.txt
 ```
 
-You will also need to manually install the [NEST][nest_git] library with:
+You will also need to manually install the [NEST Python package][nest_git] library with:
 
 ```shell
 pip install -U git+https://github.com/gifale95/NEST.git
