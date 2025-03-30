@@ -31,13 +31,29 @@ We created interactive tutorials where you can learn how to use univariate and a
 
 ### ⚙️ Installation
 
-To reproduce the paper's results, you can download and run the Python code from this repository. To run this code, you will first need to install the libraries in the [requirements.txt][requirements]. We recommend installing these libraries within a virtual environment (e.g., an [Anaconda][anaconda] environment) using:
+This repository contains code to reproduce all paper's results.
+
+To run the code, you first need to install the libraries in the [requirements.txt][requirements] file within an Anaconda environment. Here, we guide you through the installation steps.
+
+First, create an [Anaconda][anaconda] environment with the correct Python version:
+
+```shell
+conda create -n rnc_env python=3.9
+```
+
+Next, download the [requirements.txt][requirements] file, navigate with your terminal to the download directory, and activate the Anaconda environment previously created with:
+
+```shell
+source activate rnc_env
+```
+
+Now you can install the libraries with:
 
 ```shell
 pip install -r requirements.txt
 ```
 
-You will also need to manually install the [NEST Python package][nest_git] with:
+Finally, you also need to install the [NEST Python package][nest_git] with:
 
 ```shell
 pip install -U git+https://github.com/gifale95/NEST.git
