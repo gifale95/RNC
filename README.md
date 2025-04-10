@@ -6,16 +6,19 @@ Alessandro T. Gifford, Maya A. Jastrzębowska, Johannes J.D. Singer, Radoslaw M.
 
 
 
-## 📖 Theoretical motivation
+## 📄 Paper abstract
 
 Seeing is underpinned by a complex interconnected network of multiple brain regions of interest (ROIs) jointly representing visual information. However, the representational content of each ROI is typically studied in isolation, and using limited sets of experimenter-picked stimuli. Here, we addressed this by developing [Relational Neural Control (RNC)][rnc_website]. RNC generates and explores in silico functional magnetic resonance imaging (fMRI) responses for large amounts of images, finding controlling images that align or disentangle responses across ROIs, thus indicating their shared or unique representational content.
+
+
+
+## 🌓 RNC variants
 
 We developed two RNC variants:
 
 * **Univariate RNC** controls _univariate_ fMRI responses (i.e., responses averaged over all voxels within an ROI), thus exploring representational relationships for visual information encoded in the strongest activation trends common across all ROI voxels.
-* **Multivariate RNC** controls _multivariate_ fMRI responses (i.e., population response of all voxels within a ROI), thus exploring representational relationships for visual information encoded in the multi-voxel response patterns.
 
-To thoroughly explore the visual space in search for controlling stimuli, we applied RNC to in silico neural responses for thousands of naturalistic images, that is, neural responses generated through encoding models from the [Neural Encoding Simulation Toolkit (NEST)][nest_website]. Specifically, this includes NEST-generated in silico fMRI responses for the 73,000 [Natural Scenes Dataset][nsd] ([Allen et al., 2022][allen]) images, the 50,000 [ImageNet 2012 Challenge][imagenet] ([Russakovsky et al., 2015][russakovsky]) images, or the 26,107 [THINGS Database][things] ([Hebart et al., 2019][hebart]) images.
+* **Multivariate RNC** controls _multivariate_ fMRI responses (i.e., population response of all voxels within a ROI), thus exploring representational relationships for visual information encoded in the multi-voxel response patterns.
 
 For any question regarding this code, the project data, or RNC in general, you can get in touch with Ale (alessandro.gifford@gmail.com).
 
@@ -23,7 +26,9 @@ For any question regarding this code, the project data, or RNC in general, you c
 
 ## 🚀 RNC tutorials
 
-We created interactive tutorials where you can learn how to use univariate and and multivariate RNC. These tutorials are available on either _Google Colab_ ([univariate RNC][uni_rnc_colab], [multivariate RNC][multi_rnc_colab]) or _Jupyter Notebook_ ([univariate RNC][uni_rnc_jupyter], [multivariate RNC][multi_rnc_jupyter]).
+We created interactive tutorials where you can implement univariate and multivariate RNC on in silico fMRI responses of areas spanning the entire visual cortex for ~150,000 naturalistic images: 73,000 images from the [Natural Scenes Dataset][nsd] ([Allen et al., 2022][allen]); 50,000 images from the [ImageNet 2012 Challenge][imagenet] ([Russakovsky et al., 2015][russakovsky]); 26,107 images from the [THINGS Database][things] ([Hebart et al., 2019][hebart]).
+
+These tutorials are available on either _Google Colab_ ([univariate RNC][uni_rnc_colab], [multivariate RNC][multi_rnc_colab]) or _Jupyter Notebook_ ([univariate RNC][uni_rnc_jupyter], [multivariate RNC][multi_rnc_jupyter]).
 
 
 
@@ -53,10 +58,10 @@ Now you can install the libraries with:
 pip install -r requirements.txt
 ```
 
-Finally, you also need to install the [NEST Python package][nest_git] with:
+Finally, you also need to install the [NEST Python package (version 0.3.7)][nest_git] with:
 
 ```shell
-pip install -U git+https://github.com/gifale95/NEST.git
+pip install -U git+https://github.com/gifale95/NEST.git@0.3.7
 ```
 
 
@@ -74,23 +79,27 @@ To run the code you will need to download the following:
 
 * The in vivo fMRI responses for the controlling images collected in this project (https://openneuro.org/datasets/ds005503).
 
+* The Visual Illusion Reconstruction Dataset (https://figshare.com/articles/dataset/Reconstructing_visual_illusory_experiences_from_human_brain_activity/23590302).
+
 
 
 ### 📦 Code description
 
-* **00_generate_insilico_fmri_responses:** Generate in silico fMRI responses for naturalistic images, using trained encoding models from the Neural Encoding Simulation Toolkit.
-* **01_in_silico_fmri_encoding_accuracy:** Compute the encoding accuracy and perform a noise analysis on the in silico fMRI responses.
+* **00_generate_insilico_fmri_responses:** Generate the in silico fMRI responses later used by RNC.
+* **01_in_silico_fmri_encoding_accuracy:** Compute the encoding model's prediciton accuracy, and perform a noise analysis on the in silico fMRI responses.
 * **02_univariate_rnc:** Apply univariate RNC on the in silico fMRI responses.
-* **03_generative_univariate_rnc:** Apply generative univariate RNC on  in silico fMRI responses.
+* **03_generative_univariate_rnc:** Apply generative univariate RNC on the in silico fMRI responses.
 * **04_multivariate_rnc:** Apply multivariate RNC on the in silico fMRI responses.
 * **05_multivariate_rnc_retinotopy:** Perform the retinotopy analysis on the in silico fMRI resposnes for the V1 vs. V4 multivariate RNC controlling images.
-* **06_in_vivo_validation:** Analyze the in vivo fMRI responses for the V1 vs. V4 univariate and multivariate RNC controlling images.
+* **06_rnc_categorical_slectivity:** Apply the univariate and multivariate RNC categorical selectivity analysis on in silico fMRI responses for high-level visual areas.
+* **07_multidimensional_scaling:** Apply multidimensional scaling on the in silico fMRI responses for RNC's controlling images.
+* **08_in_vivo_validation:** Analyze the in vivo fMRI responses for the V1 vs. V4 univariate and multivariate RNC controlling images.
 
 
 
 ## ❗ Issues
 
-If you experience problems with the code, please submit an issue!
+If you experience problems with the code, please get in touch with Ale (alessandro.gifford@gmail.com), or submit an issue.
 
 
 
@@ -98,7 +107,7 @@ If you experience problems with the code, please submit an issue!
 If you use any of our data or code, please cite:
 
 > * Gifford AT, Jastrzębowska M, Singer JJD, Cichy RM. 2024. In silico discovery of representational relationships across visual cortex. _arXiv preprint_, arXiv:2411.10872. DOI: [https://doi.org/10.48550/arXiv.2411.10872][paper_doi]
-> * Gifford AT, Bersch D, Roig G, Cichy RM. 2024. The Neural Encoding Simulation Toolkit. _In preparation_. https://github.com/gifale95/NEST
+> * Gifford AT, Bersch D, Roig G, Cichy RM. 2025. The Neural Encoding Simulation Toolkit. _In preparation_. https://github.com/gifale95/NEST
 
 
 

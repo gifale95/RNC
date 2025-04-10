@@ -2,30 +2,25 @@
 fMRI responses of the train subjects generalize to the in silico fMRI responses
 for the left-out subject. Stats include confidence intervals and significance.
 
-The code additionally compares the multivariate RNC scores of pairwise ROI
-comparisons from different stepwise ROI distances.
-
 This code is available at:
-https://github.com/gifale95/RNC/blob/main/04_multivariate_rnc/06_stats.py
+https://github.com/gifale95/RNC
 
 Parameters
 ----------
-all_subjects : list of int
-	List of all subjects. These are the 8 (NSD) subjects for which there are
-	in silico fMRI responses.
+encoding_models_train_dataset : str
+	Dataset on which the encoding models were trained. Possible options are
+	'nsd' and 'VisualIllusionRecon'.
 cv : int
-	'1' if univariate RNC is cross-validated across subjects, '0' otherwise.
-roi_pair : int
-	Integer indicating the chosen pairwise ROI combination for which to compute
-	the stats. Possible values are '0' (V1-V2), '1' (V1-V3), '2' (V1-hV4), '3'
-	(V2-V3), '4' (V2-hV4), '5' (V3-hV4).
-imageset : str
-	Used image set. Possible choices are 'nsd', 'imagenet_val', 'things'.
+	If '1' multivariate RNC leaves the data of one subject out for
+	cross-validation, if '0' multivariate RNC uses the data of all subjects.
+roi_pair : str
+	Used pairwise ROI combination.
 control_conditions : list
 	List of used control conditions.
+imageset : str
+	Used image set. Possible choices are 'nsd', 'imagenet_val', 'things'.
 n_iter : int
-	Amount of iterations for creating confidence intervals bootstrapped
-	distribution.
+	Amount of iterations for the permutation stats.
 project_dir : str
 	Directory of the project folder.
 
@@ -38,18 +33,18 @@ from copy import copy
 import random
 from tqdm import tqdm
 from sklearn.utils import resample
-from scipy.stats import ttest_rel
+from scipy.stats import binom
 from statsmodels.stats.multitest import multipletests
 
 from utils import load_rsms
 from utils import evaluate
 
 parser = argparse.ArgumentParser()
-parser.add_argument('--all_subjects', type=list, default=[1, 2, 3, 4, 5, 6, 7, 8])
+parser.add_argument('--encoding_models_train_dataset', type=str, default='nsd')
 parser.add_argument('--cv', type=int, default=1)
-parser.add_argument('--roi_pair', type=int, default=0)
-parser.add_argument('--imageset', type=str, default='nsd')
+parser.add_argument('--roi_pair', type=str, default='V1-V2')
 parser.add_argument('--control_conditions', type=list, default=['align', 'disentangle'])
+parser.add_argument('--imageset', type=str, default='nsd')
 parser.add_argument('--n_iter', type=int, default=100000)
 parser.add_argument('--project_dir', default='../relational_neural_control/', type=str)
 args = parser.parse_args()
@@ -66,18 +61,21 @@ random.seed(seed)
 
 
 # =============================================================================
-# ROI pair combinations
+# Get the total dataset subjects
 # =============================================================================
-# 0 --> V1 - V2
-# 1 --> V1 - V3
-# 2 --> V1 - V4
-# 3 --> V2 - V3
-# 4 --> V2 - V4
-# 5 --> V3 - V4
-roi_comb_names = [['V1', 'V2'], ['V1', 'V3'], ['V1', 'hV4'], ['V2', 'V3'],
-	['V2', 'hV4'], ['V3', 'hV4']]
-roi_1 = roi_comb_names[args.roi_pair][0]
-roi_2 = roi_comb_names[args.roi_pair][1]
+if args.encoding_models_train_dataset == 'nsd':
+	all_subjects = [1, 2, 3, 4, 5, 6, 7, 8]
+
+elif args.encoding_models_train_dataset == 'VisualIllusionRecon':
+	all_subjects = [1, 2, 3, 4, 5, 6, 7]
+
+
+# =============================================================================
+# ROI names
+# =============================================================================
+idx = args.roi_pair.find('-')
+roi_1 = args.roi_pair[:idx]
+roi_2 = args.roi_pair[idx+1:]
 
 
 # =============================================================================
@@ -89,8 +87,9 @@ best_generation_image_batches = {}
 if args.cv == 0:
 	for c in args.control_conditions:
 		data_dir = os.path.join(args.project_dir, 'multivariate_rnc',
-			'best_image_batches', 'cv-'+format(args.cv), 'imageset-'+
-			args.imageset, roi_1+'-'+roi_2, 'control_condition-'+c,
+			args.encoding_models_train_dataset+'_encoding_models',
+			'best_image_batches', 'cv-'+format(args.cv),
+			'imageset-'+args.imageset, args.roi_pair, 'control_condition-'+c,
 			'best_image_batches.npy')
 		results = np.load(data_dir, allow_pickle=True).item()
 		best_generation_scores_train[c] = \
@@ -102,11 +101,12 @@ elif args.cv == 1:
 	for c in args.control_conditions:
 		best_gen_scores_train = []
 		best_gen_chromosomes = []
-		for s in args.all_subjects:
+		for sub in all_subjects:
 			data_dir = os.path.join(args.project_dir, 'multivariate_rnc',
+				args.encoding_models_train_dataset+'_encoding_models',
 				'best_image_batches', 'cv-'+format(args.cv), 'imageset-'+
-				args.imageset, roi_1+'-'+roi_2, 'control_condition-'+c,
-				'best_image_batches_subject-'+format(s, '02')+'.npy')
+				args.imageset, args.roi_pair, 'control_condition-'+c,
+				'best_image_batches_subject-'+format(sub, '02')+'.npy')
 			results = np.load(data_dir, allow_pickle=True).item()
 			best_gen_scores_train.append(copy(
 				results['image_batches_scores']))
@@ -127,25 +127,24 @@ if args.cv == 1:
 	# Cross-validate
 	best_generation_scores_test = {}
 	for c in args.control_conditions:
-		scores_test_all = []
-		for s in args.all_subjects:
-			rsm_1, rsm_2 = load_rsms(args, s, 'test')
-			scores_test = np.zeros((best_generation_image_batches[c].shape[1]))
+		scores_test = np.zeros((len(all_subjects),
+			best_generation_image_batches[c].shape[1]))
+		for s, sub in enumerate(all_subjects):
+			rsm_1, rsm_2 = load_rsms(args, sub, 'test')
 			for g in range(best_generation_image_batches[c].shape[1]):
-				image_batch = best_generation_image_batches[c][s-1,g]
+				image_batch = best_generation_image_batches[c][s,g]
 				image_batch = np.reshape(image_batch, (1, len(image_batch)))
-				scores_test[g] = evaluate(image_batch, rsm_1, rsm_2)[0]
-			scores_test_all.append(scores_test)
+				scores_test[s,g] = evaluate(image_batch, rsm_1, rsm_2)[0]
 			del rsm_1, rsm_2
-		scores_test_all = np.asarray(scores_test_all)
-		best_generation_scores_test[c] = copy(scores_test_all)
+		best_generation_scores_test[c] = copy(scores_test)
 
 
 # =============================================================================
 # Load the multivariate RNC baseline scores
 # =============================================================================
-data_dir = os.path.join(args.project_dir, 'multivariate_rnc', 'baseline',
-	'cv-'+format(args.cv), 'imageset-'+args.imageset, roi_1+'-'+roi_2)
+data_dir = os.path.join(args.project_dir, 'multivariate_rnc',
+	args.encoding_models_train_dataset+'_encoding_models', 'baseline',
+	'cv-'+format(args.cv), 'imageset-'+args.imageset, args.roi_pair)
 
 if args.cv == 0:
 	file_name = 'baseline.npy'
@@ -158,17 +157,30 @@ elif args.cv == 1:
 	baseline_images = []
 	baseline_images_score_test = []
 	baseline_images_score_train = []
-	for s in args.all_subjects:
+	null_distribution_test = []
+	for s in all_subjects:
 		file_name = 'baseline_cv_subject-' + format(s, '02') + '.npy'
 		results = np.load(os.path.join(data_dir, file_name),
 			allow_pickle=True).item()
 		baseline_images.append(results['baseline_images'])
-		baseline_images_score_test.append(results['baseline_images_score_test'])
+		baseline_images_score_test.append(
+			results['baseline_images_score_test'])
 		baseline_images_score_train.append(
 			results['baseline_images_score_train'])
+		null_distribution_test.append(
+			results['null_distribution_test'])
 	baseline_images = np.asarray(baseline_images)
 	baseline_images_score_test = np.asarray(baseline_images_score_test)
 	baseline_images_score_train = np.asarray(baseline_images_score_train)
+	null_distribution_test = np.asarray(null_distribution_test)
+	# Compute the neural control differences from baseline
+	# Alignment minus baseline
+	rsa_alignment_minus_baseline = \
+		best_generation_scores_test['align'][:,-1] - baseline_images_score_test
+	# Disentanglement minus baseline
+	rsa_disentanglement_minus_baseline = \
+		best_generation_scores_test['disentangle'][:,-1] - \
+		baseline_images_score_test
 
 
 # =============================================================================
@@ -176,7 +188,6 @@ elif args.cv == 1:
 # =============================================================================
 # Compute the confidence intervals of the cross-validated RSA scores for the
 # controlling images, across the 8 (NSD) subjects.
-
 
 if args.cv == 1:
 
@@ -192,7 +203,7 @@ if args.cv == 1:
 
 	# Compute the CI distributions
 	for i in tqdm(range(args.n_iter), leave=False):
-		idx_resample = resample(np.arange(len(args.all_subjects)))
+		idx_resample = resample(np.arange(len(all_subjects)))
 		align_dist[i] = np.mean(
 			best_generation_scores_test['align'][idx_resample,-1])
 		disentangle_dist[i] = np.mean(
@@ -209,31 +220,91 @@ if args.cv == 1:
 
 
 # =============================================================================
-# Calculate the significance (only for cv==1)
+# Compute the within-subject significance (only for cv==1)
 # =============================================================================
-# Compute the significance between the RSA scores of the aligning/disentangling
-# controlling images, and the RSA scores of the baseline images, across
-# the 8 (NSD) subjects.
+if args.cv == 1:
+
+	# To perform the within-subject significance we will use the RSA null
+	# distributions created while computing the multivariate RNC baseline.
+	# These null distributions contain 1 million scores, each consisting of the
+	# RSA scores obtained when correlating the RSMs of two ROIs based on a
+	# different set of 50 image conditions.
+
+	# Store the difference between alignment and baseline null distribution
+	# scores. The first N null distribution scores will be used as the baseline
+	# scores, and the second N null distribution scores will be used as the
+	# alignment scores (where N is equal to args.n_iter).
+	idx_baseline_start = args.n_iter * 0
+	idx_baseline_end = idx_baseline_start + args.n_iter
+	idx_align_start = args.n_iter * 1
+	idx_align_end = idx_align_start + args.n_iter
+	rsa_alignment_minus_baseline_null_dist = \
+		null_distribution_test[:,idx_align_start:idx_align_end] - \
+		null_distribution_test[:,idx_baseline_start:idx_baseline_end]
+	# Store the difference between disentanglement and baseline null
+	# distribution scores. The first N null distribution scores will be used as
+	# the baseline scores, and the third N null distribution scores will be used
+	# as the disentanglement scores (where N is equal to args.n_iter).
+	idx_disentangle_start = args.n_iter * 2
+	idx_disentangle_end = idx_disentangle_start + args.n_iter
+	rsa_disentanglement_minus_baseline_null_dist = \
+		null_distribution_test[:,idx_disentangle_start:idx_disentangle_end] - \
+		null_distribution_test[:,idx_baseline_start:idx_baseline_end]
+
+	# Compute the within-subject p-values
+	rsa_alignment_within_subject_pval = np.zeros((len(all_subjects)),
+		dtype=np.float32)
+	rsa_disentanglement_within_subject_pval = np.zeros((len(all_subjects)),
+		dtype=np.float32)
+	# Compute the p-values
+	for s, sub in enumerate(all_subjects):
+		# Alignment
+		idx = sum(rsa_alignment_minus_baseline_null_dist[s] > \
+			rsa_alignment_minus_baseline[s])
+		rsa_alignment_within_subject_pval[s] = (idx + 1) / (args.n_iter + 1) # Add one to avoid p-values of 0
+		# Disentanglement
+		idx = sum(rsa_disentanglement_minus_baseline_null_dist[s] < \
+			rsa_disentanglement_minus_baseline[s])
+		rsa_disentanglement_within_subject_pval[s] = (idx + 1) / (args.n_iter + 1)
+
+	# Benjamini/Hochberg correct the within-subject alphas over 2 comparisons
+	n_control_conditions = 2
+	# Empty significance variables
+	rsa_alignment_within_subject_sig = np.zeros((len(all_subjects)))
+	rsa_disentanglement_within_subject_sig = np.zeros((len(all_subjects)))
+	# Loop across subjects
+	for s in range(len(all_subjects)):
+		# Append the within-subject p-values across the 2 comparisons
+		pvals = np.zeros((n_control_conditions))
+		pvals[0] = rsa_alignment_within_subject_pval[s]
+		pvals[1] = rsa_disentanglement_within_subject_pval[s]
+		# Correct for multiple comparisons
+		sig, _, _, _ = multipletests(pvals, 0.05, 'fdr_bh')
+		# Store the significance scores
+		rsa_alignment_within_subject_sig[s] = sig[0]
+		rsa_disentanglement_within_subject_sig[s] = sig[1]
+
+
+# =============================================================================
+# Compute the between-subject significance (only for cv==1)
+# =============================================================================
+# Compute the probability of observing k or more significant results by chance,
+# based on the CDF of the binomial distribution of within-subject significances.
 
 if args.cv == 1:
 
-	# Compute significance using a paired samples t-test
-	p_value_align = ttest_rel(best_generation_scores_test['align'][:,-1],
-		baseline_images_score_test, alternative='greater')[1]
-	p_value_disentangle = ttest_rel(
-		best_generation_scores_test['disentangle'][:,-1],
-		baseline_images_score_test, alternative='less')[1]
+	n = len(all_subjects) # Total number of subjects
+	p = 0.05 # probability of success in each trial
 
-	# Correct for multiple comparisons
-	p_values_all = np.append(p_value_align, p_value_disentangle)
-	significance, p_values_corrected, _, _ = multipletests(p_values_all, 0.05,
-		'fdr_bh')
+	# Alignment
+	k = sum(rsa_alignment_within_subject_sig) # Number of significant subjects
+	# We use "k-1" because otherwise we would get the probability of observing
+	# k+1 or more significant results by chance
+	rsa_alignment_between_subject_pval = 1 - binom.cdf(k-1, n, p)
 
-	# Store the significance and corrected p-values
-	significance_align = significance[0]
-	significance_disentangle = significance[1]
-	p_value_corrected_align = p_values_corrected[0]
-	p_value_corrected_disentangle = p_values_corrected[1]
+	# l1l2
+	k = sum(rsa_disentanglement_within_subject_sig)
+	rsa_disentanglement_between_subject_pval = 1 - binom.cdf(k-1, n, p)
 
 
 # =============================================================================
@@ -262,21 +333,21 @@ elif args.cv == 1:
 		'ci_align': ci_align,
 		'ci_disentangle': ci_disentangle,
 		'ci_baseline': ci_baseline,
-		'p_value_align': p_value_align,
-		'p_value_disentangle': p_value_disentangle,
-		'p_value_corrected_align': p_value_corrected_align,
-		'p_value_corrected_disentangle': p_value_corrected_disentangle,
-		'significance_align': significance_align,
-		'significance_disentangle': significance_disentangle
+		'rsa_alignment_within_subject_pval': rsa_alignment_within_subject_pval,
+		'rsa_disentanglement_within_subject_pval': rsa_disentanglement_within_subject_pval,
+		'rsa_alignment_within_subject_sig': rsa_alignment_within_subject_sig,
+		'rsa_disentanglement_within_subject_sig': rsa_disentanglement_within_subject_sig,
+		'rsa_alignment_between_subject_pval': rsa_alignment_between_subject_pval,
+		'rsa_disentanglement_between_subject_pval': rsa_disentanglement_between_subject_pval,
 		}
 
-save_dir = os.path.join(args.project_dir, 'multivariate_rnc', 'stats', 'cv-'+
-	format(args.cv), 'imageset-'+args.imageset, roi_1+'-'+roi_2)
+save_dir = os.path.join(args.project_dir, 'multivariate_rnc',
+	args.encoding_models_train_dataset+'_encoding_models', 'stats', 'cv-'+
+	format(args.cv), 'imageset-'+args.imageset, args.roi_pair)
 
 if os.path.isdir(save_dir) == False:
 	os.makedirs(save_dir)
 
-file_name = 'stats'
+file_name = 'stats.npy'
 
 np.save(os.path.join(save_dir, file_name), results)
-

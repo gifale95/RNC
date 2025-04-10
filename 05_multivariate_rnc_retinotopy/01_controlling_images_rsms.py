@@ -8,7 +8,7 @@ To analyze the same controlling images as in the RNC paper, use the stats file:
 https://github.com/gifale95/RNC/blob/main/05_multivariate_rnc_retinotopy/stats.npy
 
 This code is available at:
-https://github.com/gifale95/RNC/blob/main/05_multivariate_rnc_retinotopy/01_controlling_images_rsms.py
+https://github.com/gifale95/RNC
 
 Parameters
 ----------
@@ -26,9 +26,6 @@ n_iter : int
 	distribution.
 project_dir : str
 	Directory of the project folder.
-ned_dir : str
-	Directory of the Neural Encoding Dataset.
-	https://github.com/gifale95/NED
 
 """
 
@@ -38,12 +35,9 @@ import random
 import numpy as np
 from tqdm import tqdm
 import h5py
-from ned.ned import NED
 from scipy.stats import pearsonr
 from copy import copy
 from sklearn.utils import resample
-from scipy.stats import ttest_rel
-from statsmodels.stats.multitest import multipletests
 
 parser = argparse.ArgumentParser()
 parser.add_argument('--all_subjects', type=list, default=[1, 2, 3, 4, 5, 6, 7, 8])
@@ -51,7 +45,6 @@ parser.add_argument('--ncsnr_threshold', type=float, default=0.5)
 parser.add_argument('--control_condition', type=str, default='align')
 parser.add_argument('--n_iter', type=int, default=100000)
 parser.add_argument('--project_dir', default='../relational_neural_control/', type=str)
-parser.add_argument('--ned_dir', default='../neural_encoding_dataset/', type=str)
 args = parser.parse_args()
 
 print('>>> Create controlling images RSMs <<<')
@@ -68,8 +61,9 @@ random.seed(seed)
 # =============================================================================
 # Load the multivariate RNC cv-0 aligning images numbers
 # =============================================================================
-data_dir = os.path.join(args.project_dir, 'multivariate_rnc', 'stats', 'cv-0',
-	'imageset-nsd', 'V1-hV4', 'stats.npy') # https://github.com/gifale95/RNC/blob/main/05_multivariate_rnc_retinotopy/stats.npy
+data_dir = os.path.join(args.project_dir, 'multivariate_rnc',
+	'nsd_encoding_models', 'stats', 'cv-0', 'imageset-nsd', 'V1-hV4',
+	'stats.npy') # https://github.com/gifale95/RNC/blob/main/05_multivariate_rnc_retinotopy/stats.npy
 
 stats = np.load(data_dir, allow_pickle=True).item()
 
@@ -110,39 +104,39 @@ for s, sub in tqdm(enumerate(args.all_subjects)):
 
 
 # =============================================================================
-# Load pre-generated NED NSD responses
+# Load the in silico fMRI responses for the NSD images
 # =============================================================================
-	ned_object = NED(args.ned_dir)
-
 	# V1
 	# Load the in silico fMRI responses
 	data_dir = os.path.join(args.project_dir, 'insilico_fmri_responses',
-		'imageset-nsd', 'insilico_fmri_responses_sub-'+format(sub, '02')+
-		'_roi-V1.h5')
+		'nsd_encoding_models', 'insilico_fmri', 'imageset-nsd',
+		'insilico_fmri_responses_sub-'+format(sub, '02')+'_roi-V1.h5')
 	fmri_v1 = h5py.File(data_dir).get('insilico_fmri_responses')
-	# Load the in silico fMRI responses metadata
-	metadata_v1 = ned_object.get_metadata(
-		modality='fmri',
-		train_dataset='nsd',
-		model='fwrf',
-		subject=sub,
-		roi='V1'
-		)
+	# Load the ncsnr
+	ncsnr_dir = os.path.join(args.project_dir, 'insilico_fmri_responses',
+		'nsd_encoding_models', 'insilico_fmri', 'ncsnr_sub-'+format(sub, '02')+
+		'_roi-V1.npy')
+	ncsnr = np.load(ncsnr_dir)
+	# Only retain voxels with noise ceiling signal-to-noise ratio scores
+	# above the selected threshold.
+	best_voxels = np.where(ncsnr > args.ncsnr_threshold)[0]
+	fmri_v1 = fmri_v1[:,best_voxels]
 
 	# V4
 	# Load the in silico fMRI responses
 	data_dir = os.path.join(args.project_dir, 'insilico_fmri_responses',
-		'imageset-nsd', 'insilico_fmri_responses_sub-'+format(sub, '02')+
-		'_roi-hV4.h5')
+		'nsd_encoding_models', 'insilico_fmri', 'imageset-nsd',
+		'insilico_fmri_responses_sub-'+format(sub, '02')+'_roi-hV4.h5')
 	fmri_v4 = h5py.File(data_dir).get('insilico_fmri_responses')
-	# Load the in silico fMRI responses metadata
-	metadata_v4 = ned_object.get_metadata(
-		modality='fmri',
-		train_dataset='nsd',
-		model='fwrf',
-		subject=sub,
-		roi='hV4'
-		)
+	# Load the ncsnr
+	ncsnr_dir = os.path.join(args.project_dir, 'insilico_fmri_responses',
+		'nsd_encoding_models', 'insilico_fmri', 'ncsnr_sub-'+format(sub, '02')+
+		'_roi-hV4.npy')
+	ncsnr = np.load(ncsnr_dir)
+	# Only retain voxels with noise ceiling signal-to-noise ratio scores
+	# above the selected threshold.
+	best_voxels = np.where(ncsnr > args.ncsnr_threshold)[0]
+	fmri_v4 = fmri_v4[:,best_voxels]
 
 
 # =============================================================================
@@ -150,16 +144,6 @@ for s, sub in tqdm(enumerate(args.all_subjects)):
 # =============================================================================
 	fmri_v1 = fmri_v1[best_generation_image_batches]
 	fmri_v4 = fmri_v4[best_generation_image_batches]
-
-
-# =============================================================================
-# Voxels selection
-# =============================================================================
-	idx_voxels_v1 = metadata_v1['fmri']['ncsnr'] > args.ncsnr_threshold
-	idx_voxels_v4 = metadata_v4['fmri']['ncsnr'] > args.ncsnr_threshold
-
-	fmri_v1 = fmri_v1[:,idx_voxels_v1]
-	fmri_v4 = fmri_v4[:,idx_voxels_v4]
 
 
 # =============================================================================
@@ -270,50 +254,6 @@ if args.control_condition == 'align':
 
 
 # =============================================================================
-# Calculate the significance
-# =============================================================================
-# (sky vs. sky) vs. (sky vs. non sky)
-v1_p_value_1 = ttest_rel(v1_corr_sky_sky, v1_corr_sky_non_sky,
-	alternative='greater')[1]
-v4_p_value_1 = ttest_rel(v4_corr_sky_sky, v4_corr_sky_non_sky,
-	alternative='greater')[1]
-
-# (sky vs. sky) vs. (non sky vs. non sky)
-v1_p_value_2 = ttest_rel(v1_corr_sky_sky, v1_corr_non_sky_non_sky,
-	alternative='greater')[1]
-v4_p_value_2 = ttest_rel(v4_corr_sky_sky, v4_corr_non_sky_non_sky,
-	alternative='greater')[1]
-
-# (sky vs. non sky) vs. (non sky vs. non sky)
-v1_p_value_3 = ttest_rel(v1_corr_sky_non_sky, v1_corr_non_sky_non_sky,
-	alternative='less')[1]
-v4_p_value_3 = ttest_rel(v4_corr_sky_non_sky, v4_corr_non_sky_non_sky,
-	alternative='less')[1]
-
-# Correct for multiple comparisons
-V1_p_values_all = np.asarray((v1_p_value_1, v1_p_value_2, v1_p_value_3))
-V4_p_values_all = np.asarray((v4_p_value_1, v4_p_value_2, v4_p_value_3))
-v1_significance, v1_p_values_corrected, _, _ = multipletests(V1_p_values_all,
-	0.05, 'fdr_bh')
-v4_significance, v4_p_values_corrected, _, _ = multipletests(V4_p_values_all,
-	0.05, 'fdr_bh')
-
-# Store the significance and corrected p-values
-v1_significance_1 = v1_significance[0]
-v1_significance_2 = v1_significance[1]
-v1_significance_3 = v1_significance[2]
-v1_p_value_corrected_1 = v1_p_values_corrected[0]
-v1_p_value_corrected_2 = v1_p_values_corrected[1]
-v1_p_value_corrected_3 = v1_p_values_corrected[2]
-v4_significance_1 = v4_significance[0]
-v4_significance_2 = v4_significance[1]
-v4_significance_3 = v4_significance[2]
-v4_p_value_corrected_1 = v4_p_values_corrected[0]
-v4_p_value_corrected_2 = v4_p_values_corrected[1]
-v4_p_value_corrected_3 = v4_p_values_corrected[2]
-
-
-# =============================================================================
 # Save the results
 # =============================================================================
 results = {
@@ -331,36 +271,16 @@ results = {
 	'ci_v1_corr_sky_non_sky': ci_v1_corr_sky_non_sky,
 	'ci_v4_corr_sky_sky': ci_v4_corr_sky_sky,
 	'ci_v4_corr_non_sky_non_sky': ci_v4_corr_non_sky_non_sky,
-	'ci_v4_corr_sky_non_sky': ci_v4_corr_sky_non_sky,
-
-	'v1_p_value_1': v1_p_value_1,
-	'v1_p_value_2': v1_p_value_2,
-	'v1_p_value_3': v1_p_value_3,
-	'v4_p_value_1': v4_p_value_1,
-	'v4_p_value_2': v4_p_value_2,
-	'v4_p_value_3': v4_p_value_3,
-
-	'v1_p_value_corrected_1': v1_p_value_corrected_1,
-	'v1_p_value_corrected_2': v1_p_value_corrected_2,
-	'v1_p_value_corrected_3': v1_p_value_corrected_3,
-	'v4_p_value_corrected_1': v4_p_value_corrected_1,
-	'v4_p_value_corrected_2': v4_p_value_corrected_2,
-	'v4_p_value_corrected_3': v4_p_value_corrected_3,
-
-	'v1_significance_1': v1_significance_1,
-	'v1_significance_2': v1_significance_2,
-	'v1_significance_3': v1_significance_3,
-	'v4_significance_1': v4_significance_1,
-	'v4_significance_2': v4_significance_2,
-	'v4_significance_3': v4_significance_3
+	'ci_v4_corr_sky_non_sky': ci_v4_corr_sky_non_sky
 	}
 
-save_dir = os.path.join(args.project_dir, 'retinotopy_effect', 'imageset-nsd')
+save_dir = os.path.join(args.project_dir, 'retinotopy_effect',
+	'nsd_encoding_models', 'imageset-nsd', 'V1-hV4')
 
 if os.path.isdir(save_dir) == False:
 	os.makedirs(save_dir)
 
-file_name = 'rsms_control_condition-' + args.control_condition
+file_name = 'rsms_control_condition-' + args.control_condition + '.npy'
 
 np.save(os.path.join(save_dir, file_name), results)
 

@@ -12,22 +12,23 @@ averaged across these 25 images provides the ROI's univariate response
 baseline.
 
 This code is available at:
-https://github.com/gifale95/RNC/blob/main/02_univariate_rnc/01_baseline.py
+https://github.com/gifale95/RNC
 
 Parameters
 ----------
-all_subjects : list of int
-	List of all subjects. These are the 8 (NSD) subjects for which there are
-	in silico fMRI responses.
+encoding_models_train_dataset : str
+	Dataset on which the encoding models were trained. Possible options are
+	'nsd' and 'VisualIllusionRecon'.
 cv : int
-	If '1' the in silico univariate fMRI responses of one subject are left out
-	for cross-validation, if '0' the univariate responses of all subjects are
-	used.
+	If '1' univariate RNC leaves the data of one subject out for
+	cross-validation, if '0' univariate RNC uses the data of all subjects.
 cv_subject : int
-	If cv=0 the left-out subject during cross-validation, out of all 8 (NSD)
-	subjects.
-rois : list of str
-	List of used ROIs.
+	If cv==1, the left-out subject during cross-validation, out of the 8 NSD
+	subjects (if encoding_models_train_dataset=='nsd'), or the 7 Visual Illusion
+	Reconstruction dataset subjects
+	(if encoding_models_train_dataset=='VisualIllusionRecon').
+roi : str
+	Used ROI.
 ncsnr_threshold : float
 	Lower bound ncsnr threshold of the kept voxels: only voxels above this
 	threshold are used.
@@ -39,9 +40,6 @@ null_dist_samples : int
 	Amount of null distribution samples.
 project_dir : str
 	Directory of the project folder.
-ned_dir : str
-	Directory of the Neural Encoding Dataset.
-	https://github.com/gifale95/NED
 
 """
 
@@ -53,19 +51,17 @@ from tqdm import tqdm
 from sklearn.utils import resample
 from copy import copy
 import h5py
-from ned.ned import NED
 
 parser = argparse.ArgumentParser()
-parser.add_argument('--all_subjects', type=list, default=[1, 2, 3, 4, 5, 6, 7, 8])
-parser.add_argument('--cv', type=int, default=1)
+parser.add_argument('--encoding_models_train_dataset', type=str, default='nsd')
+parser.add_argument('--cv', type=int, default=0)
 parser.add_argument('--cv_subject', type=int, default=1)
-parser.add_argument('--rois', type=list, default=['V1', 'V2', 'V3', 'hV4'])
+parser.add_argument('--roi', type=str, default='V1')
 parser.add_argument('--ncsnr_threshold', type=float, default=0.5)
 parser.add_argument('--imageset', type=str, default='nsd')
 parser.add_argument('--n_images', type=int, default=25)
 parser.add_argument('--null_dist_samples', type=int, default=1000000)
 parser.add_argument('--project_dir', default='../relational_neural_control/', type=str)
-parser.add_argument('--ned_dir', default='../neural_encoding_dataset/', type=str)
 args = parser.parse_args()
 
 print('>>> Univariate RNC baseline <<<')
@@ -80,14 +76,17 @@ random.seed(seed)
 
 
 # =============================================================================
-# Initialize the Neural Encoding Dataset (NED) object
+# Get the total dataset subjects
 # =============================================================================
-# https://github.com/gifale95/NED
-ned_object = NED(args.ned_dir)
+if args.encoding_models_train_dataset == 'nsd':
+	all_subjects = [1, 2, 3, 4, 5, 6, 7, 8]
+
+elif args.encoding_models_train_dataset == 'VisualIllusionRecon':
+	all_subjects = [1, 2, 3, 4, 5, 6, 7]
 
 
 # =============================================================================
-# Sum the ROI data across voxels
+# Compute the univariate responses
 # =============================================================================
 # In silico fMRI univariate responses array of shape:
 # (Subjects × ROIs × Images)
@@ -97,41 +96,41 @@ elif args.imageset == 'imagenet_val':
 	images = 50000
 elif args.imageset == 'things':
 	images = 26107
-uni_resp = np.zeros((len(args.all_subjects), len(args.rois), images),
-	dtype=np.float32)
+uni_resp = np.zeros((len(all_subjects), images), dtype=np.float32)
 
-for s, sub in enumerate(args.all_subjects):
-	for r, roi in enumerate(args.rois):
+for s, sub in enumerate(all_subjects):
 
-		# Load the in silico fMRI responses
-		data_dir = os.path.join(args.project_dir, 'insilico_fmri_responses',
-			'imageset-'+args.imageset, 'insilico_fmri_responses_sub-'+
-			format(sub, '02')+'_roi-'+roi+'.h5')
-		betas = h5py.File(data_dir).get('insilico_fmri_responses')
+	# Load the in silico fMRI responses
+	data_dir = os.path.join(args.project_dir, 'insilico_fmri_responses',
+		args.encoding_models_train_dataset+'_encoding_models', 'insilico_fmri',
+		'imageset-'+args.imageset, 'insilico_fmri_responses_sub-'+
+		format(sub, '02')+'_roi-'+args.roi+'.h5')
+	betas = h5py.File(data_dir).get('insilico_fmri_responses')
 
-		# Load the in silico fMRI responses metadata
-		metadata = ned_object.get_metadata(
-			modality='fmri',
-			train_dataset='nsd',
-			model='fwrf',
-			subject=sub,
-			roi=roi
-			)
+	# Load the ncsnr
+	ncsnr_dir = os.path.join(args.project_dir, 'insilico_fmri_responses',
+		args.encoding_models_train_dataset+'_encoding_models', 'insilico_fmri',
+		'ncsnr_sub-'+format(sub, '02')+'_roi-'+args.roi+'.npy')
+	ncsnr = np.load(ncsnr_dir)
 
-		# Only retain voxels with noise ceiling signal-to-noise ratio scores
-		# above the selected threshold
-		best_voxels = np.where(
-			metadata['fmri']['ncsnr'] > args.ncsnr_threshold)[0]
-		betas = betas[:,best_voxels]
-
-		# Score the fMRI activity across voxels (there might be NaN values since
-		# some subjects have missing data)
-		uni_resp[s,r] = np.nanmean(betas, 1)
+	# Only retain voxels with noise ceiling signal-to-noise ratio scores
+	# above the selected threshold.
+	best_voxels = np.where(ncsnr > args.ncsnr_threshold)[0]
+	# For subject 4 of the Visual Illusion Reconstruction dataset, lower the
+	# ncsnr theshold for ROI hV4 to 0.4, since there are no voxels above a
+	# threshold of 0.5
+	if args.encoding_models_train_dataset == 'VisualIllusionRecon':
+		if args.roi == 'hV4' and sub == 4 and args.ncsnr_threshold > 0.4:
+			best_voxels = np.where(ncsnr > 0.4)[0]
+	betas = betas[:,best_voxels]
+	# Average the fMRI activity across voxels (there might be NaN values since
+	# some subjects have missing data)
+	uni_resp[s] = np.nanmean(betas, 1)
 
 # If cross-validating, remove the CV (test) subject, and average over the
-# remaining (train) subjects. The fMRI responses for the train subjects are used
-# to select the baseline images, and the same images are also used as baseline
-# for the test subjects.
+# remaining (train) subjects. The fMRI responses for the train subjects are
+# used to select the baseline images, and the same images are also used as
+# baseline for the test subjects.
 if args.cv == 0:
 	uni_resp_mean = np.mean(uni_resp, 0)
 elif args.cv == 1:
@@ -149,20 +148,20 @@ elif args.cv == 1:
 null_distrubition_images = np.zeros((args.null_dist_samples, args.n_images),
 	dtype=np.int32)
 if args.cv == 0:
-	null_distribution = np.zeros((args.null_dist_samples, len(args.rois)))
+	null_distribution = np.zeros((args.null_dist_samples))
 elif args.cv == 1:
-	null_distribution_train = np.zeros((args.null_dist_samples, len(args.rois)))
-	null_distribution_test = np.zeros((args.null_dist_samples, len(args.rois)))
+	null_distribution_train = np.zeros((args.null_dist_samples))
+	null_distribution_test = np.zeros((args.null_dist_samples))
 for i in tqdm(range(args.null_dist_samples), leave=False):
-	sample = resample(np.arange(images), replace=False, n_samples=args.n_images)
+	sample = resample(np.arange(images), replace=False,
+		n_samples=args.n_images)
 	sample.sort()
 	null_distrubition_images[i] = copy(sample)
-	for r in range(len(args.rois)):
-		if args.cv == 0:
-			null_distribution[i,r] = np.mean(uni_resp_mean[r,sample])
-		elif args.cv == 1:
-			null_distribution_train[i,r] = np.mean(uni_resp_mean_train[r,sample])
-			null_distribution_test[i,r] = np.mean(uni_resp_mean_test[r,sample])
+	if args.cv == 0:
+		null_distribution[i] = np.mean(uni_resp_mean[sample])
+	elif args.cv == 1:
+		null_distribution_train[i] = np.mean(uni_resp_mean_train[sample])
+		null_distribution_test[i] = np.mean(uni_resp_mean_test[sample])
 
 
 # =============================================================================
@@ -172,29 +171,24 @@ for i in tqdm(range(args.null_dist_samples), leave=False):
 # closest to the null distribution's mean.
 
 if args.cv == 0:
-	baseline_images_score = np.zeros(len(args.rois))
-elif args.cv == 1:
-	baseline_images_score_train = np.zeros(len(args.rois))
-	baseline_images_score_test = np.zeros(len(args.rois))
-baseline_images = np.zeros((len(args.rois), args.n_images), dtype=np.int32)
+	null_distribution_mean = np.mean(null_distribution)
+	idx_best = np.argsort(abs(null_distribution - null_distribution_mean))[0]
+	baseline_images = null_distrubition_images[idx_best]
+	baseline_images_score = null_distribution[idx_best]
 
-for r in range(len(args.rois)):
-	if args.cv == 0:
-		null_distribution_mean = np.mean(null_distribution[:,r])
-		idx_best = np.argsort(abs(
-			null_distribution[:,r] - null_distribution_mean))[0]
-		baseline_images[r] = null_distrubition_images[idx_best]
-		baseline_images_score[r] = null_distribution[idx_best,r]
-	elif args.cv == 1:
-		# The baseline images are chosen from the train subjects null
-		# distribution, and then also evaluated on the test subject (to see
-		# whether they generalize).
-		null_distribution_mean = np.mean(null_distribution_train[:,r])
-		idx_best = np.argsort(abs(
-			null_distribution_train[:,r] - null_distribution_mean))[0]
-		baseline_images[r] = null_distrubition_images[idx_best]
-		baseline_images_score_train[r] = null_distribution_train[idx_best,r]
-		baseline_images_score_test[r] = null_distribution_test[idx_best,r]
+elif args.cv == 1:
+	# The baseline images are chosen from the train subjects null
+	# distribution, and then also evaluated on the test subject (to see
+	# whether they generalize).
+	null_distribution_mean = np.mean(null_distribution_train)
+	idx_best = np.argsort(abs(
+		null_distribution_train - null_distribution_mean))[0]
+	baseline_images = null_distrubition_images[idx_best]
+	baseline_images_score_train = null_distribution_train[idx_best]
+	baseline_images_score_test = null_distribution_test[idx_best]
+
+# Convert the baseline images to integer
+baseline_images = baseline_images.astype(np.int32)
 
 
 # =============================================================================
@@ -212,16 +206,17 @@ elif args.cv == 1:
 		'baseline_images_score_train': baseline_images_score_train,
 		}
 
-save_dir = os.path.join(args.project_dir, 'univariate_rnc', 'baseline', 'cv-'+
+save_dir = os.path.join(args.project_dir, 'univariate_rnc',
+	args.encoding_models_train_dataset+'_encoding_models', 'baseline', 'cv-'+
 	format(args.cv), 'imageset-'+args.imageset)
 
 if os.path.isdir(save_dir) == False:
 	os.makedirs(save_dir)
 
 if args.cv == 0:
-	file_name = 'baseline'
+	file_name = 'baseline_roi-' + args.roi
 elif args.cv == 1:
-	file_name = 'baseline_cv_subject-' + format(args.cv_subject, '02')
+	file_name = 'baseline_cv_subject-' + format(args.cv_subject, '02') + \
+		'_roi-' + args.roi
 
 np.save(os.path.join(save_dir, file_name), results)
-

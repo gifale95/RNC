@@ -1,4 +1,4 @@
-def load_encoding_models(args, roi):
+def load_encoding_models(args, roi, device):
 	"""Load the encoding models, and metadata.
 
 	Parameters
@@ -7,6 +7,8 @@ def load_encoding_models(args, roi):
 		Input arguments.
 	roi : str
 		Used ROI.
+	device : str
+		If 'cpu' keep the model on CPU, if 'cuda' send the model to GPU.
 
 	Returns
 	-------
@@ -17,27 +19,27 @@ def load_encoding_models(args, roi):
 
 	"""
 
-	from ned.ned import NED
+	from nest.nest import NEST
 	from copy import deepcopy
 
-	### Initialize NED ###
-	ned_object = NED(args.ned_dir)
+	### Initialize NEST ###
+	nest_object = NEST(args.nest_dir)
 
 	### Load the trained encoding model weights and metadata ###
 	encoding_models = []
 	metadata = []
 	for sub in args.all_subjects:
 		# Encoding model weights
-		encoding_models.append(deepcopy(ned_object.get_encoding_model(
+		encoding_models.append(deepcopy(nest_object.get_encoding_model(
 			modality='fmri',
 			train_dataset='nsd',
 			model='fwrf',
 			subject=sub,
 			roi=roi,
-			device='auto'
+			device=device
 			)))
 		# Metadata
-		metadata.append(deepcopy(ned_object.get_metadata(
+		metadata.append(deepcopy(nest_object.get_metadata(
 			modality='fmri',
 			train_dataset='nsd',
 			model='fwrf',
@@ -49,17 +51,19 @@ def load_encoding_models(args, roi):
 	return encoding_models, metadata
 
 
-def load_generator(args):
+def load_image_generator(args, device):
 	"""Load the image generator.
 
 	Parameters
 	----------
 	args : Namespace
 		Input arguments.
+	device : str
+		If 'cpu' keep the model on CPU, if 'cuda' send the model to GPU.
 
 	Returns
 	-------
-	generator : PyTorch model
+	image_generator : object
 		Image generator model.
 
 	"""
@@ -67,14 +71,15 @@ def load_generator(args):
 	import os
 	import torch
 	import torch_nets # https://github.com/willwx/XDream/tree/master/xdream/net_utils/torch_nets
+	from diffusers import ConsistencyModelPipeline
 
-	### Instantiate the generator model ###
-	if args.gan == 'DeePSiM':
+	### DeePSiM (GAN) ###
+	if args.image_generator_name == 'DeePSiM':
 		# (Dosovitskiy & Bronx, 2016) https://doi.org/10.48550/arXiv.1602.02644
 		# (Xiao & Kreiman, 2020) https://doi.org/10.1371/journal.pcbi.1007973
 		# (Ponce et al., 2019) https://doi.org/10.1016/j.cell.2019.04.005
 		# ------------------------------
-		# When using the 'fc6' version of DeePSiM I sometimes get a patch with
+		# When using the 'fc6' version of DeePSiM we sometimes get a patch with
 		# stereotypical shape in the center right of the synthesized images.
 		# This is a known problem, that has been pointed out in
 		# (Ponce et al., 2019):
@@ -88,29 +93,45 @@ def load_generator(args):
 		# interpretations. In the future, more modern GNN training methods
 		# should avoid this problem (personal correspondence with Alexey
 		# Dosovitskiy)."""
-		generator = torch_nets.load_net('deepsim-'+args.gan_type)
-
-	### Load the generator model weights ###
-	if args.gan == 'DeePSiM':
+		# ------------------------------
+		# Instantiate the 'DeePSiM' image generator model
+		image_generator = torch_nets.load_net('deepsim-fc7')
+		# Load the generator model weights
 		# The generator trained weights can be downloaded from:
 		# https://drive.google.com/drive/folders/1sV54kv5VXvtx4om1c9kBPbdlNuurkGFi
 		weight_dir = os.path.join(args.project_dir, 'generative_univariate_rnc',
-			'generator_weights', 'deepsim', args.gan_type+'.pt')
-	generator_weights = torch.load(weight_dir, map_location='cpu')
+			'generator_weights', 'deepsim', 'fc7.pt')
+		generator_weights = torch.load(weight_dir, map_location='cpu')
+		# Load the trained weights into the image generator
+		image_generator.load_state_dict(generator_weights)
+		# Set "requires_grad" to False, and turn on evaluation mode
+		for param in image_generator.parameters():
+			param.requires_grad = False
+		image_generator.eval()
 
-	### Load the trained weights into the generator ###
-	generator.load_state_dict(generator_weights)
-
-	#### Set "requires_grad" to False, and turn on evaluation mode
-	for param in generator.parameters():
-		param.requires_grad = False
-	generator.eval()
+	### cd_imagenet64_l2 (diffusion model) ###
+	elif args.image_generator_name == 'cd_imagenet64_l2':
+		# https://huggingface.co/openai/diffusers-cd_imagenet64_l2
+		model = 'openai/diffusers-cd_imagenet64_l2'
+		#image_generator = ConsistencyModelPipeline.from_pretrained(
+		#	model).to(device)
+		# Speed up inference:
+		# https://huggingface.co/docs/diffusers/v0.32.2/optimization/fp16
+		image_generator = ConsistencyModelPipeline.from_pretrained(model,
+			torch_dtype=torch.float16, use_safetensors=True).to(device)
+		# Speed up inference:
+		# https://huggingface.co/docs/diffusers/v0.32.2/optimization/fp16
+		# https://huggingface.co/docs/diffusers/v0.32.2/optimization/xformers
+		#image_generator.enable_xformers_memory_efficient_attention()
+		# Reduce memory usage
+		image_generator.enable_sequential_cpu_offload()
+		image_generator.enable_xformers_memory_efficient_attention()
 
 	### Output ###
-	return generator
+	return image_generator
 
 
-def generate_insilico_fmri(args, encoding_models, metadata, images):
+def generate_insilico_fmri(args, encoding_models, metadata, images, device):
 	"""Use the encoding models to generate the in silico fMRI responses for the
 	synthesized images.
 
@@ -127,6 +148,8 @@ def generate_insilico_fmri(args, encoding_models, metadata, images):
 		(Batch size x 3 RGB Channels x Width x Height) consisting of integer
 		values in the range [0, 255]. Furthermore, the images must be of square
 		size (i.e., equal width and height).
+	device : str
+		If 'cpu' perform encoding on CPU, if 'cuda' perform encoding on GPU.
 
 	Returns
 	-------
@@ -136,20 +159,20 @@ def generate_insilico_fmri(args, encoding_models, metadata, images):
 	"""
 
 	import numpy as np
-	from ned.ned import NED
+	from nest.nest import NEST
 	from copy import copy
 
-	### Initialize NED ###
-	ned_object = NED(args.ned_dir)
+	### Initialize NEST ###
+	nest_object = NEST(args.nest_dir)
 
 	### Generate the in silico fMRI responses to images ###
 	fmri = []
 	for s in range(len(args.all_subjects)):
-		fmri_sub = ned_object.encode(
+		fmri_sub = nest_object.encode(
 			encoding_models[s],
 			images,
 			return_metadata=False,
-			device='auto'
+			device=device
 			)
 		# Only retain voxels with noise ceiling signal-to-noise ratio scores
 		# above the selected threshold
@@ -242,42 +265,46 @@ def score_select(args, fmri_roi_1, fmri_roi_2, image_codes, images,
 	# [1] --> High ROI 1 - Low ROI 2
 	# [2] --> Low ROI 1 - High ROI 2
 	# [3] --> Low ROI 1 - Low ROI 2
-	if args.control_type == 0:
+	if args.control_type == 'high_1_high_2':
 		neural_control_scores_train = fmri_roi_1_train + fmri_roi_2_train
 		neural_control_scores_test = fmri_roi_1_test + fmri_roi_2_test
-	elif args.control_type == 1:
+	elif args.control_type == 'high_1_low_2':
 		neural_control_scores_train = fmri_roi_1_train - fmri_roi_2_train
 		neural_control_scores_test = fmri_roi_1_test - fmri_roi_2_test
-	elif args.control_type == 2:
+	elif args.control_type == 'low_1_high_2':
 		neural_control_scores_train = fmri_roi_2_train - fmri_roi_1_train
 		neural_control_scores_test = fmri_roi_2_test - fmri_roi_1_test
-	elif args.control_type == 3:
+	elif args.control_type == 'low_1_low_2':
 		neural_control_scores_train = fmri_roi_1_train + fmri_roi_2_train
 		neural_control_scores_test = fmri_roi_1_test + fmri_roi_2_test
 
 	### Compute a penalty based on the fMRI baseline ###
+	if args.baseline_margin == None:
+		baseline_margin = 1e+10
+	else:
+		baseline_margin = args.baseline_margin
 	baseline_penalty_train = np.zeros((args.n_image_codes), dtype=int)
 	baseline_penalty_test = np.zeros((args.n_image_codes), dtype=int)
-	if args.control_type == 0:
-		idx_bad_train_roi_1 = fmri_roi_1_train < (baseline_roi_1 + args.baseline_margin)
-		idx_bad_train_roi_2 = fmri_roi_2_train < (baseline_roi_2 + args.baseline_margin)
-		idx_bad_test_roi_1 = fmri_roi_1_test < (baseline_roi_1 + args.baseline_margin)
-		idx_bad_test_roi_2 = fmri_roi_2_test < (baseline_roi_2 + args.baseline_margin)
-	elif args.control_type == 1:
-		idx_bad_train_roi_1 = fmri_roi_1_train < (baseline_roi_1 + args.baseline_margin)
-		idx_bad_train_roi_2 = fmri_roi_2_train > (baseline_roi_2 - args.baseline_margin)
-		idx_bad_test_roi_1 = fmri_roi_1_test < (baseline_roi_1 + args.baseline_margin)
-		idx_bad_test_roi_2 = fmri_roi_2_test > (baseline_roi_2 - args.baseline_margin)
-	elif args.control_type == 2:
-		idx_bad_train_roi_1 = fmri_roi_1_train > (baseline_roi_1 - args.baseline_margin)
-		idx_bad_train_roi_2 = fmri_roi_2_train < (baseline_roi_2 + args.baseline_margin)
-		idx_bad_test_roi_1 = fmri_roi_1_test > (baseline_roi_1 - args.baseline_margin)
-		idx_bad_test_roi_2 = fmri_roi_2_test < (baseline_roi_2 + args.baseline_margin)
-	elif args.control_type == 3:
-		idx_bad_train_roi_1 = fmri_roi_1_train > (baseline_roi_1 - args.baseline_margin)
-		idx_bad_train_roi_2 = fmri_roi_2_train > (baseline_roi_2 - args.baseline_margin)
-		idx_bad_test_roi_1 = fmri_roi_1_test > (baseline_roi_1 - args.baseline_margin)
-		idx_bad_test_roi_2 = fmri_roi_2_test > (baseline_roi_2 - args.baseline_margin)
+	if args.control_type == 'high_1_high_2':
+		idx_bad_train_roi_1 = fmri_roi_1_train < (baseline_roi_1 + baseline_margin)
+		idx_bad_train_roi_2 = fmri_roi_2_train < (baseline_roi_2 + baseline_margin)
+		idx_bad_test_roi_1 = fmri_roi_1_test < (baseline_roi_1 + baseline_margin)
+		idx_bad_test_roi_2 = fmri_roi_2_test < (baseline_roi_2 + baseline_margin)
+	elif args.control_type == 'high_1_low_2':
+		idx_bad_train_roi_1 = fmri_roi_1_train < (baseline_roi_1 + baseline_margin)
+		idx_bad_train_roi_2 = fmri_roi_2_train > (baseline_roi_2 - baseline_margin)
+		idx_bad_test_roi_1 = fmri_roi_1_test < (baseline_roi_1 + baseline_margin)
+		idx_bad_test_roi_2 = fmri_roi_2_test > (baseline_roi_2 - baseline_margin)
+	elif args.control_type == 'low_1_high_2':
+		idx_bad_train_roi_1 = fmri_roi_1_train > (baseline_roi_1 - baseline_margin)
+		idx_bad_train_roi_2 = fmri_roi_2_train < (baseline_roi_2 + baseline_margin)
+		idx_bad_test_roi_1 = fmri_roi_1_test > (baseline_roi_1 - baseline_margin)
+		idx_bad_test_roi_2 = fmri_roi_2_test < (baseline_roi_2 + baseline_margin)
+	elif args.control_type == 'low_1_low_2':
+		idx_bad_train_roi_1 = fmri_roi_1_train > (baseline_roi_1 - baseline_margin)
+		idx_bad_train_roi_2 = fmri_roi_2_train > (baseline_roi_2 - baseline_margin)
+		idx_bad_test_roi_1 = fmri_roi_1_test > (baseline_roi_1 - baseline_margin)
+		idx_bad_test_roi_2 = fmri_roi_2_test > (baseline_roi_2 - baseline_margin)
 	idx_bad_train = np.where(idx_bad_train_roi_1 + idx_bad_train_roi_2)[0]
 	baseline_penalty_train[idx_bad_train] = 1e+10
 	idx_bad_test = np.where(idx_bad_test_roi_1 + idx_bad_test_roi_2)[0]
@@ -300,7 +327,7 @@ def score_select(args, fmri_roi_1, fmri_roi_2, image_codes, images,
 		images_complexity[i] = output.tell()
 
 	### Aggregate neural control and baseline penalty scores ###
-	if args.control_type == 3:
+	if args.control_type == 'low_1_low_2':
 		neural_scores_train = neural_control_scores_train + \
 			baseline_penalty_train
 		neural_scores_test = neural_control_scores_test + baseline_penalty_test
@@ -329,7 +356,7 @@ def score_select(args, fmri_roi_1, fmri_roi_2, image_codes, images,
 	# necessarily want images which well control neural responses but, once
 	# we have such images, we want them to be as simple (to isolate controlling
 	# visual features) as possible.
-	if args.control_type == 3:
+	if args.control_type == 'low_1_low_2':
 		scores_train = neural_scores_train - image_scores
 		scores_test = neural_scores_test - image_scores
 	else:
@@ -337,7 +364,7 @@ def score_select(args, fmri_roi_1, fmri_roi_2, image_codes, images,
 		scores_test = neural_scores_test + image_scores
 
 	### Rank the scores from best to worst ###
-	if args.control_type == 3:
+	if args.control_type == 'low_1_low_2':
 		rank = np.argsort(scores_train)
 	else:
 		rank = np.argsort(scores_train)[::-1]
@@ -346,8 +373,8 @@ def score_select(args, fmri_roi_1, fmri_roi_2, image_codes, images,
 	return scores_train[rank], scores_test[rank], \
 		neural_control_scores_train[rank], neural_control_scores_test[rank], \
 		baseline_penalty_train[rank], baseline_penalty_test[rank], \
-		images_complexity[rank], image_codes[rank], \
-		fmri_roi_1[:,rank], fmri_roi_2[:,rank], images[rank]
+		images_complexity[rank], image_codes[rank], fmri_roi_1[:,rank], \
+		fmri_roi_2[:,rank], images[rank]
 
 
 def optimize_image_codes(args, image_codes, scores, random_generator):
@@ -397,16 +424,23 @@ def optimize_image_codes(args, image_codes, scores, random_generator):
 	scaler = StandardScaler()
 	scores = scaler.fit_transform(
 		np.reshape(scores, (len(scores), -1))).squeeze() * .5
-	if args.control_type == 3:
+	if args.control_type == 'low_1_low_2':
 		scores = - scores
 	prob_scores = softmax(scores)
 
 	### Keep X% of the best image codes untouched ###
-	kept_img_codes = int(len(image_codes) * args.frac_kept_image_codes)
+	n_kept_img_codes = int(len(image_codes) * args.frac_kept_image_codes)
+	n_new_image_codes = len(image_codes) - n_kept_img_codes
+
+	### Vectorize the image codes ###
+	new_image_codes_shape = list(image_codes.shape)
+	new_image_codes_shape[0] = n_new_image_codes
+	new_image_codes_shape = tuple(new_image_codes_shape)
+	image_codes = np.reshape(image_codes, (len(image_codes),-1))
 
 	### Recombine and mutate the remaining image codes ###
 	image_codes_new = []
-	for i in range(len(image_codes) - kept_img_codes):
+	for i in range(n_new_image_codes):
 		# Select the two parent image codes based on their probability scores
 		parents = random_generator.choice(len(image_codes), size=2,
 			replace=False, p=prob_scores)
@@ -424,6 +458,9 @@ def optimize_image_codes(args, image_codes, scores, random_generator):
 			scale=.75, size=len(mutations_idx))
 		image_codes_new.append(copy(child_image_code))
 	image_codes_new = np.asarray(image_codes_new)
+
+	### Reshape the image codes to original format ###
+	image_codes_new = np.reshape(image_codes_new, new_image_codes_shape)
 
 	### Output ###
 	return image_codes_new

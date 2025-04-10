@@ -1,30 +1,33 @@
 """For each pairwise ROI comparison, randomly select a batch of 50 images (out
 of all images from the chosen image set), pick the corresponding RSM entries
-from the previously computed RSMs, and used representational similarity analysis
-(RSA) to compare the RSMs of the two ROIs (through a Pearson’s correlation).
-This will results in one score indicating how similar/dissimilar the
-multivariate responses for the two ROIs are for that image batch.
+from the previously computed RSMs, and used representational similarity
+analysis (RSA) to compare the RSMs of the two ROIs (through a Pearson’s
+correlation). This will results in one score indicating how similar/dissimilar
+the multivariate responses for the two ROIs are for that image batch.
 
 Repeating this step 1 million times will create the multivariate RNC null 
-distribution, from which the 50 images from the batch with score closest to the
-distribution's mean are selected. The RSA score for these 50 images provides the
-ROI's RSA baseline.
+distribution, from which the 50 images from the batch with score closest to
+the distribution's mean are selected. The RSA score for these 50 images
+provides the ROI's RSA baseline.
 
 This code is available at:
-https://github.com/gifale95/RNC/blob/main/04_multivariate_rnc/04_baseline.py
+https://github.com/gifale95/RNC
 
 Parameters
 ----------
+encoding_models_train_dataset : str
+	Dataset on which the encoding models were trained. Possible options are
+	'nsd' and 'VisualIllusionRecon'.
 cv : int
-	If '1' the in silico fMRI RSMs of one subject are left out for
-	cross-validation, if '0' use the RSMs averaged across all subjects.
+	If '1' multivariate RNC leaves the data of one subject out for
+	cross-validation, if '0' multivariate RNC uses the data of all subjects.
 cv_subject : int
-	If 'cv==0' the left-out subject during cross-validation, out of all 8 (NSD)
-	subjects.
-roi_pair : int
-	Integer indicating the chosen pairwise ROI combination for which to compute
-	the baseline RSA score. Possible values are '0' (V1-V2), '1' (V1-V3), '2'
-	(V1-hV4), '3' (V2-V3), '4' (V2-hV4), '5' (V3-hV4).
+	If cv==1, the left-out subject during cross-validation, out of the 8 NSD
+	subjects (if encoding_models_train_dataset=='nsd'), or the 7 Visual Illusion
+	Reconstruction dataset subjects
+	(if encoding_models_train_dataset=='VisualIllusionRecon').
+roi_pair : str
+	Used pairwise ROI combination.
 imageset : str
 	Used image set. Possible choices are 'nsd', 'imagenet_val', 'things'.
 n_images_per_batch : int
@@ -48,9 +51,10 @@ from utils import load_rsms
 from utils import evaluate
 
 parser = argparse.ArgumentParser()
+parser.add_argument('--encoding_models_train_dataset', type=str, default='nsd')
 parser.add_argument('--cv', type=int, default=1)
 parser.add_argument('--cv_subject', type=int, default=1)
-parser.add_argument('--roi_pair', type=int, default=0)
+parser.add_argument('--roi_pair', type=str, default='V1-V2')
 parser.add_argument('--imageset', type=str, default='nsd')
 parser.add_argument('--n_images_per_batch', type=int, default=50)
 parser.add_argument('--null_dist_samples', type=int, default=1000000)
@@ -69,18 +73,11 @@ random.seed(seed)
 
 
 # =============================================================================
-# ROI pair combinations
+# ROI names
 # =============================================================================
-# 0 --> V1 - V2
-# 1 --> V1 - V3
-# 2 --> V1 - V4
-# 3 --> V2 - V3
-# 4 --> V2 - V4
-# 5 --> V3 - V4
-roi_comb_names = [['V1', 'V2'], ['V1', 'V3'], ['V1', 'hV4'], ['V2', 'V3'],
-	['V2', 'hV4'], ['V3', 'hV4']]
-roi_1 = roi_comb_names[args.roi_pair][0]
-roi_2 = roi_comb_names[args.roi_pair][1]
+idx = args.roi_pair.find('-')
+roi_1 = args.roi_pair[:idx]
+roi_2 = args.roi_pair[idx+1:]
 
 
 # =============================================================================
@@ -154,6 +151,9 @@ elif args.cv == 1:
 	baseline_images_score_train = null_distribution_train[idx_best]
 	baseline_images_score_test = null_distribution_test[idx_best]
 
+# Convert the baseline images to integer
+baseline_images = baseline_images.astype(np.int32)
+
 
 # =============================================================================
 # Save the results
@@ -173,18 +173,19 @@ elif args.cv == 1:
 		'baseline_images': baseline_images,
 		'baseline_images_score_test': baseline_images_score_test,
 		'baseline_images_score_train': baseline_images_score_train,
+		'null_distribution_test': null_distribution_test
 		}
 
-save_dir = os.path.join(args.project_dir, 'multivariate_rnc', 'baseline',
-	'cv-'+format(args.cv), 'imageset-'+args.imageset, roi_1+'-'+roi_2)
+save_dir = os.path.join(args.project_dir, 'multivariate_rnc',
+	args.encoding_models_train_dataset+'_encoding_models', 'baseline', 'cv-'+
+	format(args.cv), 'imageset-'+args.imageset, args.roi_pair)
 
 if os.path.isdir(save_dir) == False:
 	os.makedirs(save_dir)
 
 if args.cv == 0:
-	file_name = 'baseline'
+	file_name = 'baseline.npy'
 elif args.cv == 1:
-	file_name = 'baseline_cv_subject-' + format(args.cv_subject, '02')
+	file_name = 'baseline_cv_subject-' + format(args.cv_subject, '02') + '.npy'
 
 np.save(os.path.join(save_dir, file_name), results)
-

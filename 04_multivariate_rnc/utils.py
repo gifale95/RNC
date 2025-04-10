@@ -23,20 +23,14 @@ def load_rsms(args, cv_subject=1, split='test'):
 	import os
 	import numpy as np
 
-	### Pairwise ROI combinations ###
-	# 0 --> V1 - V2
-	# 1 --> V1 - V3
-	# 2 --> V1 - V4
-	# 3 --> V2 - V3
-	# 4 --> V2 - V4
-	# 5 --> V3 - V4
-	roi_comb_names = [['V1', 'V2'], ['V1', 'V3'], ['V1', 'hV4'], ['V2', 'V3'],
-		['V2', 'hV4'], ['V3', 'hV4']]
-	roi_1 = roi_comb_names[args.roi_pair][0]
-	roi_2 = roi_comb_names[args.roi_pair][1]
+	### ROI names ###
+	idx = args.roi_pair.find('-')
+	roi_1 = args.roi_pair[:idx]
+	roi_2 = args.roi_pair[idx+1:]
 
 	### Load the RSMs ###
-	dir_rsm = os.path.join(args.project_dir, 'multivariate_rnc', 'rsms',
+	dir_rsm = os.path.join(args.project_dir, 'multivariate_rnc',
+		args.encoding_models_train_dataset+'_encoding_models', 'rsms',
 		'imageset-'+args.imageset)
 	if args.cv == 0:
 		file_name_roi_1 = 'averaged_rsm_' + roi_1 + '_all_subjects.npy'
