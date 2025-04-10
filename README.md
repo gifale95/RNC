@@ -85,15 +85,15 @@ To run the code you will need to download the following:
 
 ### 📦 Code description
 
-* **00_generate_insilico_fmri_responses:** Generate the in silico fMRI responses later used by RNC.
-* **01_in_silico_fmri_encoding_accuracy:** Compute the encoding model's prediciton accuracy, and perform a noise analysis on the in silico fMRI responses.
-* **02_univariate_rnc:** Apply univariate RNC on the in silico fMRI responses.
-* **03_generative_univariate_rnc:** Apply generative univariate RNC on the in silico fMRI responses.
-* **04_multivariate_rnc:** Apply multivariate RNC on the in silico fMRI responses.
-* **05_multivariate_rnc_retinotopy:** Perform the retinotopy analysis on the in silico fMRI resposnes for the V1 vs. V4 multivariate RNC controlling images.
-* **06_rnc_categorical_slectivity:** Apply the univariate and multivariate RNC categorical selectivity analysis on in silico fMRI responses for high-level visual areas.
-* **07_multidimensional_scaling:** Apply multidimensional scaling on the in silico fMRI responses for RNC's controlling images.
-* **08_in_vivo_validation:** Analyze the in vivo fMRI responses for the V1 vs. V4 univariate and multivariate RNC controlling images.
+* **[`00_generate_insilico_fmri_responses`](https://github.com/gifale95/RNC/tree/main/00_generate_insilico_fmri_responses):** Generate the in silico fMRI responses later used by RNC.
+* **[`01_in_silico_fmri_encoding_accuracy`](https://github.com/gifale95/RNC/tree/main/01_in_silico_fmri_encoding_accuracy):** Compute the encoding model's prediciton accuracy, and perform a noise analysis on the in silico fMRI responses.
+* **[`02_univariate_rnc`](https://github.com/gifale95/RNC/tree/main/02_univariate_rnc):** Apply univariate RNC on the in silico fMRI responses.
+* **[`03_generative_univariate_rnc`](https://github.com/gifale95/RNC/tree/main/03_generative_univariate_rnc):** Apply generative univariate RNC on the in silico fMRI responses.
+* **[`04_multivariate_rnc`](https://github.com/gifale95/RNC/tree/main/04_multivariate_rnc):** Apply multivariate RNC on the in silico fMRI responses.
+* **[`05_multivariate_rnc_retinotopy`](https://github.com/gifale95/RNC/tree/main/05_multivariate_rnc_retinotopy):** Perform the retinotopy analysis on the in silico fMRI resposnes for the V1 vs. V4 multivariate RNC controlling images.
+* **[`06_rnc_categorical_slectivity`](https://github.com/gifale95/RNC/tree/main/06_rnc_categorical_slectivity):** Apply the univariate and multivariate RNC categorical selectivity analysis on in silico fMRI responses for high-level visual areas.
+* **[`07_multidimensional_scaling`](https://github.com/gifale95/RNC/tree/main/07_multidimensional_scaling):** Apply multidimensional scaling on the in silico fMRI responses for RNC's controlling images.
+* **[`08_in_vivo_validation`](https://github.com/gifale95/RNC/tree/main/08_in_vivo_validation):** Analyze the in vivo fMRI responses for the V1 vs. V4 univariate and multivariate RNC controlling images.
 
 
 
