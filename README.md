@@ -20,8 +20,6 @@ We developed two RNC variants:
 
 * **Multivariate RNC** controls _multivariate_ fMRI responses (i.e., population response of all voxels within a ROI), thus exploring representational relationships for visual information encoded in the multi-voxel response patterns.
 
-For any question regarding this code, the project data, or RNC in general, you can get in touch with Ale (alessandro.gifford@gmail.com).
-
 
 
 ## 🚀 RNC tutorials
@@ -69,7 +67,7 @@ pip install -U git+https://github.com/gifale95/NEST.git@0.3.7
 
 To run the code you will need to download the following:
 
-* The Neural Encoding Simulation Toolkit (https://www.alegifford.com/projects/nest/).
+* The Neural Encoding Simulation Toolkit (https://github.com/gifale95/NEST).
 
 * The 73,000 stimulus images from the Natural Scenes Dataset (https://naturalscenesdataset.org/).
 
