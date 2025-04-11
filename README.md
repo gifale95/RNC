@@ -1,6 +1,6 @@
 # In silico discovery of representational relationships across visual cortex
 
-Here we provide the code from the paper:</br>
+Here we provide the code to reproduce all results from the paper:</br>
 "[In silico discovery of representational relationships across visual cortex][paper_doi]".</br>
 Alessandro T. Gifford, Maya A. Jastrzębowska, Johannes J.D. Singer, Radoslaw M. Cichy
 
