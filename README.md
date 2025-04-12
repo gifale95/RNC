@@ -24,7 +24,7 @@ We developed two RNC variants:
 
 ## 🚀 RNC tutorials
 
-We created interactive tutorials where you can implement univariate and multivariate RNC on in silico fMRI responses of areas spanning the entire visual cortex for ~150,000 naturalistic images: 73,000 images from the [Natural Scenes Dataset][nsd] ([Allen et al., 2022][allen]); 50,000 images from the [ImageNet 2012 Challenge][imagenet] ([Russakovsky et al., 2015][russakovsky]); 26,107 images from the [THINGS Database][things] ([Hebart et al., 2019][hebart]).
+We created interactive tutorials where you can implement univariate and multivariate RNC on in silico fMRI responses of 23 areas spanning the entire visual cortex for ~150,000 naturalistic images: 73,000 images from the [Natural Scenes Dataset][nsd] ([Allen et al., 2022][allen]); 50,000 images from the [ImageNet 2012 Challenge][imagenet] ([Russakovsky et al., 2015][russakovsky]); 26,107 images from the [THINGS Database][things] ([Hebart et al., 2019][hebart]).
 
 These tutorials are available on either _Google Colab_ ([univariate RNC][uni_rnc_colab], [multivariate RNC][multi_rnc_colab]) or _Jupyter Notebook_ ([univariate RNC][uni_rnc_jupyter], [multivariate RNC][multi_rnc_jupyter]).
 
