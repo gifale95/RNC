@@ -223,8 +223,8 @@ for c, control in enumerate(control_types):
 	ax1.patch.set_visible(False)
 	x = np.arange(len(fmri_roi_1[control][0]))
 	# Plot the baseline threshold
-#	ax2.plot([np.mean(threshold[control]), np.mean(threshold[control])],
-#		[-1e+10, 1e+10], '--', color='grey', label='__no_label__', linewidth=3)
+	ax2.plot([np.mean(threshold[control]), np.mean(threshold[control])],
+		[-1e+10, 1e+10], '--', color='grey', label='__no_label__', linewidth=3)
 	# Plot the image complexity
 	ax2.plot(x, np.mean(images_complexity[control], 0), linewidth=3, color='k',
 		label='Image complexity', zorder=1)
