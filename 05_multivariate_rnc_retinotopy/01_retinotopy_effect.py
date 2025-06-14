@@ -31,9 +31,9 @@ project_dir : str
 nsd_dir : str
 	Directory of the Natural Scenes Dataset.
 	https://naturalscenesdataset.org/
-nest_dir : str
-	Directory of the Neural Encoding Dataset.
-	https://github.com/gifale95/NEST
+berg_dir : str
+	Directory of the Brain Encoding Response Generator.
+	https://github.com/gifale95/BERG
 
 """
 
@@ -46,7 +46,7 @@ from tqdm import tqdm
 import nibabel as nib
 import h5py
 import pandas as pd
-from nest.nest import NEST
+from berg import BERG
 from scipy.stats import binom
 from sklearn.utils import resample
 from statsmodels.stats.multitest import multipletests
@@ -58,7 +58,7 @@ parser.add_argument('--ncsnr_threshold', type=float, default=0.5)
 parser.add_argument('--n_iter', type=int, default=100000)
 parser.add_argument('--project_dir', default='../relational_neural_control/', type=str)
 parser.add_argument('--nsd_dir', default='../natural-scenes-dataset/', type=str)
-parser.add_argument('--nest_dir', default='../neural_encoding_simulation_toolkit/', type=str)
+parser.add_argument('--berg_dir', default='../brain-encoding-reponse-generator/', type=str)
 args = parser.parse_args()
 
 print('>>> Test retinotopy effect <<<')
@@ -192,15 +192,13 @@ for s, sub in tqdm(enumerate(args.all_subjects)):
 # =============================================================================
 # Get the ROI mask in volume space
 # =============================================================================
-	# Initialize NEST
-	# https://github.com/gifale95/NEST
-	nest_object = NEST(args.nest_dir)
+	# Initialize BERG
+	# https://github.com/gifale95/BERG
+	berg_object = BERG(args.berg_dir)
 
 	# Get the metadata
-	metadata = nest_object.get_metadata(
-		modality='fmri',
-		train_dataset='nsd',
-		model='fwrf',
+	metadata = berg_object.get_model_metadata(
+		model_id='fmri-nsd-fwrf',
 		subject=sub,
 		roi=args.roi
 		)

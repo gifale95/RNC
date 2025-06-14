@@ -1,5 +1,5 @@
-"""Generate the in silico fMRI responses to images using the Neural Encoding
-Simulation Toolkit (NEST): https://github.com/gifale95/NEST.
+"""Generate the in silico fMRI responses to images using the Brain Encoding
+Response Generator (BERG): https://github.com/gifale95/BERG.
 
 This code additionally stores the noise ceiling signal-to-noise ratio of the
 fMRI responses.
@@ -19,9 +19,9 @@ imageset : str
 	choices are 'nsd', 'imagenet_val', 'things'.
 project_dir : str
 	Directory of the project folder.
-nest_dir : str
-	Directory of the Neural Encoding Dataset.
-	https://github.com/gifale95/NEST
+berg_dir : str
+	Directory of the Brain Encoding Response Generator.
+	https://github.com/gifale95/BERG
 nsd_dir : str
 	Directory of the Natural Scenes Dataset.
 	https://naturalscenesdataset.org/
@@ -38,7 +38,7 @@ import argparse
 import os
 import numpy as np
 from tqdm import tqdm
-from nest.nest import NEST
+from berg import BERG
 import pandas as pd
 import h5py
 import torchvision
@@ -50,7 +50,7 @@ parser.add_argument('--subject', default=1, type=int)
 parser.add_argument('--roi', default='FFA', type=str)
 parser.add_argument('--imageset', type=str, default='nsd')
 parser.add_argument('--project_dir', default='../relational_neural_control/', type=str)
-parser.add_argument('--nest_dir', default='../neural_encoding_simulation_toolkit/', type=str)
+parser.add_argument('--berg_dir', default='../brain-encoding-reponse-generator/', type=str)
 parser.add_argument('--nsd_dir', default='../natural-scenes-dataset/', type=str)
 parser.add_argument('--imagenet_dir', default='../ILSVRC2012/', type=str)
 parser.add_argument('--things_dir', default='../things_database/', type=str)
@@ -63,10 +63,10 @@ for key, val in vars(args).items():
 
 
 # =============================================================================
-# Initialize NEST
+# Initialize BERG
 # =============================================================================
-# https://github.com/gifale95/NEST
-nest_object = NEST(args.nest_dir)
+# https://github.com/gifale95/BERG
+berg_object = BERG(args.berg_dir)
 
 
 # =============================================================================
@@ -99,30 +99,24 @@ elif args.imageset == 'things':
 # https://cvnlab.slite.page/p/X_7BBMgghj/ROIs
 if args.roi in ['FFA', 'VWFA']:
 	# Encoding model for ROI split 1
-	encoding_model_1 = nest_object.get_encoding_model(
-		modality='fmri',
-		train_dataset='nsd',
-		model='fwrf',
+	encoding_model_1 = berg_object.get_encoding_model(
+		model_id='fmri-nsd-fwrf',
 		subject=args.subject,
-		roi=args.roi+'-1',
+		selection={'roi': args.roi+'-1'},
 		device='auto'
 		)
 	# Encoding model for ROI split 2
-	encoding_model_2 = nest_object.get_encoding_model(
-		modality='fmri',
-		train_dataset='nsd',
-		model='fwrf',
+	encoding_model_2 = berg_object.get_encoding_model(
+		model_id='fmri-nsd-fwrf',
 		subject=args.subject,
-		roi=args.roi+'-2',
+		selection={'roi': args.roi+'-2'},
 		device='auto'
 		)
 else:
-	encoding_model = nest_object.get_encoding_model(
-		modality='fmri',
-		train_dataset='nsd',
-		model='fwrf',
+	encoding_model = berg_object.get_encoding_model(
+		model_id='fmri-nsd-fwrf',
 		subject=args.subject,
-		roi=args.roi,
+		selection={'roi': args.roi},
 		device='auto'
 		)
 
@@ -155,26 +149,23 @@ for i in tqdm(range(len(images))):
 
 	# Generate the in silico fMRI image responses
 	if args.roi in ['FFA']:
-		insilico_fmri_1 = np.squeeze(nest_object.encode(
+		insilico_fmri_1 = np.squeeze(berg_object.encode(
 			encoding_model_1,
 			img,
-			return_metadata=False,
-			device='auto'
+			return_metadata=False
 			))
-		insilico_fmri_2 = np.squeeze(nest_object.encode(
+		insilico_fmri_2 = np.squeeze(berg_object.encode(
 			encoding_model_2,
 			img,
-			return_metadata=False,
-			device='auto'
+			return_metadata=False
 			))
 		insilico_fmri.append(np.append(insilico_fmri_1, insilico_fmri_2))
 		del insilico_fmri_1, insilico_fmri_2
 	else:
-		insilico_fmri.append(np.squeeze(nest_object.encode(
+		insilico_fmri.append(np.squeeze(berg_object.encode(
 			encoding_model,
 			img,
-			return_metadata=False,
-			device='auto'
+			return_metadata=False
 			)))
 
 insilico_fmri = np.asarray(insilico_fmri)
@@ -206,18 +197,14 @@ with h5py.File(os.path.join(save_dir, file_name), 'w') as f:
 # https://cvnlab.slite.page/p/X_7BBMgghj/ROIs
 if args.roi in ['FFA', 'VWFA']:
 	# Load the metadata for ROI split 1
-	metadata_1 = nest_object.get_metadata(
-		modality='fmri',
-		train_dataset='nsd',
-		model='fwrf',
+	metadata_1 = berg_object.get_model_metadata(
+		model_id='fmri-nsd-fwrf',
 		subject=args.subject,
 		roi=args.roi+'-1'
 		)
 	# Load the metadata for ROI split 2
-	metadata_2 = nest_object.get_metadata(
-		modality='fmri',
-		train_dataset='nsd',
-		model='fwrf',
+	metadata_2 = berg_object.get_model_metadata(
+		model_id='fmri-nsd-fwrf',
 		subject=args.subject,
 		roi=args.roi+'-2'
 		)
@@ -225,10 +212,8 @@ if args.roi in ['FFA', 'VWFA']:
 	ncsnr = np.append(metadata_1['fmri']['ncsnr'], metadata_2['fmri']['ncsnr'])
 else:
 	# Load the metadata
-	metadata = nest_object.get_metadata(
-		modality='fmri',
-		train_dataset='nsd',
-		model='fwrf',
+	metadata = berg_object.get_model_metadata(
+		model_id='fmri-nsd-fwrf',
 		subject=args.subject,
 		roi=args.roi
 		)

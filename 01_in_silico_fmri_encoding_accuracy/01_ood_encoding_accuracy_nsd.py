@@ -1,4 +1,4 @@
-"""Compute the Neural Encoding Simulation Toolkit (NEST) fMRI encoding models
+"""Compute the Brain Encoding Response Generator (BERG) fMRI encoding models
 out-of-distribution (OOD) encoding accuracies, using NSD-synthetic.
 
 This code is available at:
@@ -19,9 +19,9 @@ n_iter : int
 	distribution.
 project_dir : str
 	Directory of the project folder.
-nest_dir : str
-	Directory of the Neural Encoding Simulation Toolkit.
-	https://github.com/gifale95/NEST
+berg_dir : str
+	Directory of the Brain Encoding Response Generator.
+	https://github.com/gifale95/BERG
 nsd_dir : str
 	Directory of the Natural Scenes Dataset.
 	https://naturalscenesdataset.org/
@@ -34,7 +34,7 @@ import random
 import numpy as np
 from tqdm import tqdm
 from sklearn.utils import resample
-from nest.nest import NEST
+from berg import BERG
 from scipy.stats import pearsonr
 import nibabel as nib
 import h5py
@@ -48,7 +48,7 @@ parser.add_argument('--rois', type=list, default=['V1', 'V2', 'V3', 'hV4', 'FFA'
 parser.add_argument('--ncsnr_threshold', type=float, default=0.5)
 parser.add_argument('--n_iter', default=100000, type=int)
 parser.add_argument('--project_dir', default='../relational_neural_control/', type=str)
-parser.add_argument('--nest_dir', default='../neural_encoding_simulation_toolkit/', type=str)
+parser.add_argument('--berg_dir', default='../brain-encoding-reponse-generator/', type=str)
 parser.add_argument('--nsd_dir', default='../natural-scenes-dataset/', type=str)
 args = parser.parse_args()
 
@@ -59,10 +59,10 @@ for key, val in vars(args).items():
 
 
 # =============================================================================
-# Initialize NEST
+# Initialize the BERG object
 # =============================================================================
-# https://github.com/gifale95/NEST
-nest_object = NEST(args.nest_dir)
+# https://github.com/gifale95/BERG
+berg_object = BERG(args.berg_dir)
 
 
 # =============================================================================
@@ -82,26 +82,20 @@ for s in tqdm(args.all_subjects, leave=False):
 		# https://cvnlab.slite.page/p/X_7BBMgghj/ROIs
 		if r in ['FFA']:
 			# Metadata model for ROI split 1
-			metadata_1 = nest_object.get_metadata(
-				modality='fmri',
-				train_dataset='nsd',
-				model='fwrf',
+			metadata_1 = berg_object.get_model_metadata(
+				model_id='fmri-nsd-fwrf',
 				subject=s,
 				roi=r+'-1'
 				)
 			# Metadata model for ROI split 2
-			metadata_2 = nest_object.get_metadata(
-				modality='fmri',
-				train_dataset='nsd',
-				model='fwrf',
+			metadata_2 = berg_object.get_model_metadata(
+				model_id='fmri-nsd-fwrf',
 				subject=s,
 				roi=r+'-2'
 				)
 		else:
-			metadata = nest_object.get_metadata(
-				modality='fmri',
-				train_dataset='nsd',
-				model='fwrf',
+			metadata = berg_object.get_model_metadata(
+				model_id='fmri-nsd-fwrf',
 				subject=s,
 				roi=r
 				)
@@ -228,55 +222,46 @@ for s in tqdm(args.all_subjects, leave=False):
 		# https://cvnlab.slite.page/p/X_7BBMgghj/ROIs
 		if r in ['FFA']:
 			# Encoding model for ROI split 1
-			encoding_model_1 = nest_object.get_encoding_model(
-				modality='fmri',
-				train_dataset='nsd',
-				model='fwrf',
+			encoding_model_1 = berg_object.get_encoding_model(
+				model_id='fmri-nsd-fwrf',
 				subject=s,
-				roi=r+'-1',
+				selection={'roi': r+'-1'},
 				device='auto'
 				)
 			# Encoding model for ROI split 2
-			encoding_model_2 = nest_object.get_encoding_model(
-				modality='fmri',
-				train_dataset='nsd',
-				model='fwrf',
+			encoding_model_2 = berg_object.get_encoding_model(
+				model_id='fmri-nsd-fwrf',
 				subject=s,
-				roi=r+'-2',
+				selection={'roi': r+'-2'},
 				device='auto'
 				)
 		else:
-			encoding_model = nest_object.get_encoding_model(
-				modality='fmri',
-				train_dataset='nsd',
-				model='fwrf',
+			encoding_model = berg_object.get_encoding_model(
+				model_id='fmri-nsd-fwrf',
 				subject=s,
-				roi=r,
+				selection={'roi': r},
 				device='auto'
 				)
 
 		# Generate the in silico fMRI responses to images
 		if r in ['FFA']:
-			insilico_fmri_1 = np.squeeze(nest_object.encode(
+			insilico_fmri_1 = np.squeeze(berg_object.encode(
 				encoding_model_1,
 				images,
-				return_metadata=False,
-				device='auto'
+				return_metadata=False
 				))
-			insilico_fmri_2 = np.squeeze(nest_object.encode(
+			insilico_fmri_2 = np.squeeze(berg_object.encode(
 				encoding_model_2,
 				images,
-				return_metadata=False,
-				device='auto'
+				return_metadata=False
 				))
 			insilico_fmri = np.append(insilico_fmri_1, insilico_fmri_2, 1)
 			del insilico_fmri_1, insilico_fmri_2
 		else:
-			insilico_fmri = np.squeeze(nest_object.encode(
+			insilico_fmri = np.squeeze(berg_object.encode(
 				encoding_model,
 				images,
-				return_metadata=False,
-				device='auto'
+				return_metadata=False
 				))
 		insilico_fmri = insilico_fmri.astype(np.float32)
 

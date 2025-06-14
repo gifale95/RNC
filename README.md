@@ -56,10 +56,10 @@ Now you can install the libraries with:
 pip install -r requirements.txt
 ```
 
-Finally, you also need to install the [NEST Python package (version 0.3.7)][nest_git] with:
+Finally, you also need to install the [BERG Python package (version 2.0.0)][berg_git] with:
 
 ```shell
-pip install -U git+https://github.com/gifale95/NEST.git@0.3.7
+pip install -U git+https://github.com/gifale95/BERG.git@2.0.0
 ```
 
 
@@ -67,7 +67,7 @@ pip install -U git+https://github.com/gifale95/NEST.git@0.3.7
 
 To run the code you will need to download the following:
 
-* The Neural Encoding Simulation Toolkit (https://github.com/gifale95/NEST).
+* The Brain Encoding Response Generator (https://github.com/gifale95/BERG).
 
 * The 73,000 stimulus images from the Natural Scenes Dataset (https://naturalscenesdataset.org/).
 
@@ -105,7 +105,7 @@ If you experience problems with the code, please get in touch with Ale (alessand
 If you use any of our data or code, please cite:
 
 > * Gifford AT, Jastrzębowska M, Singer JJD, Cichy RM. 2024. In silico discovery of representational relationships across visual cortex. _arXiv preprint_, arXiv:2411.10872. DOI: [https://doi.org/10.48550/arXiv.2411.10872][paper_doi]
-> * Gifford AT, Bersch D, Roig G, Cichy RM. 2025. The Neural Encoding Simulation Toolkit. _In preparation_. https://github.com/gifale95/NEST
+> * Gifford AT, Bersch D, Roig G, Cichy RM. 2025. The Brain Encoding Response Generator. _In preparation_. https://github.com/gifale95/BERG
 
 
 
@@ -124,4 +124,4 @@ If you use any of our data or code, please cite:
 [multi_rnc_jupyter]: https://github.com/gifale95/RNC/blob/main/tutorials/multivariate_rnc_tutorial.ipynb
 [requirements]: https://github.com/gifale95/RNC/blob/main/requirements.txt
 [anaconda]: https://docs.conda.io/projects/conda/en/latest/user-guide/tasks/manage-environments.html
-[nest_git]: https://github.com/gifale95/NEST
+[berg_git]: https://github.com/gifale95/BERG

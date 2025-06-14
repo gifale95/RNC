@@ -19,30 +19,26 @@ def load_encoding_models(args, roi, device):
 
 	"""
 
-	from nest.nest import NEST
+	from berg import BERG
 	from copy import deepcopy
 
-	### Initialize NEST ###
-	nest_object = NEST(args.nest_dir)
+	### Initialize BERG ###
+	berg_object = BERG(args.berg_dir)
 
 	### Load the trained encoding model weights and metadata ###
 	encoding_models = []
 	metadata = []
 	for sub in args.all_subjects:
 		# Encoding model weights
-		encoding_models.append(deepcopy(nest_object.get_encoding_model(
-			modality='fmri',
-			train_dataset='nsd',
-			model='fwrf',
+		encoding_models.append(deepcopy(berg_object.get_encoding_model(
+			model_id='fmri-nsd-fwrf',
 			subject=sub,
-			roi=roi,
+			selection={'roi': roi},
 			device=device
 			)))
 		# Metadata
-		metadata.append(deepcopy(nest_object.get_metadata(
-			modality='fmri',
-			train_dataset='nsd',
-			model='fwrf',
+		metadata.append(deepcopy(berg_object.get_model_metadata(
+			model_id='fmri-nsd-fwrf',
 			subject=sub,
 			roi=roi
 			)))
@@ -159,20 +155,19 @@ def generate_insilico_fmri(args, encoding_models, metadata, images, device):
 	"""
 
 	import numpy as np
-	from nest.nest import NEST
+	from berg import BERG
 	from copy import copy
 
-	### Initialize NEST ###
-	nest_object = NEST(args.nest_dir)
+	### Initialize BERG ###
+	berg_object = BERG(args.berg_dir)
 
 	### Generate the in silico fMRI responses to images ###
 	fmri = []
 	for s in range(len(args.all_subjects)):
-		fmri_sub = nest_object.encode(
+		fmri_sub = berg_object.encode(
 			encoding_models[s],
 			images,
-			return_metadata=False,
-			device=device
+			return_metadata=False
 			)
 		# Only retain voxels with noise ceiling signal-to-noise ratio scores
 		# above the selected threshold

@@ -1,4 +1,4 @@
-"""Compute the Neural Encoding Simulation Toolkit (NEST) fMRI encoding models
+"""Compute the Brain Encoding Response Generator (BERG) fMRI encoding models
 in-distribution (ID) encoding accuracy, using NSD-core's 515 test images not
 used for model training.
 
@@ -51,9 +51,9 @@ n_iter : int
 	Amount of iterations for the permutation stats.
 project_dir : str
 	Directory of the project folder.
-nest_dir : str
-	Directory of the Neural Encoding Simulation Toolkit.
-	https://github.com/gifale95/NEST
+berg_dir : str
+	Directory of the Brain Encoding Response Generator.
+	https://github.com/gifale95/BERG
 
 """
 
@@ -65,7 +65,7 @@ from tqdm import tqdm
 from sklearn.utils import resample
 from statsmodels.stats.multitest import multipletests
 from scipy.stats import binom
-from nest.nest import NEST
+from berg import BERG
 from scipy.stats import pearsonr
 import h5py
 
@@ -75,7 +75,7 @@ parser.add_argument('--rois', type=list, default=['V1', 'V2', 'V3', 'hV4', 'FFA'
 parser.add_argument('--ncsnr_threshold', type=float, default=0.5)
 parser.add_argument('--n_iter', default=100000, type=int)
 parser.add_argument('--project_dir', default='../relational_neural_control/', type=str)
-parser.add_argument('--nest_dir', default='../neural_encoding_simulation_toolkit/', type=str)
+parser.add_argument('--berg_dir', default='../brain-encoding-reponse-generator/', type=str)
 args = parser.parse_args()
 
 print('>>> Encoding accuracy and SNR analysis - NSD <<<')
@@ -85,10 +85,10 @@ for key, val in vars(args).items():
 
 
 # =============================================================================
-# Initialize the NEST object
+# Initialize the BERG object
 # =============================================================================
-# https://github.com/gifale95/NEST
-nest_object = NEST(args.nest_dir)
+# https://github.com/gifale95/BERG
+berg_object = BERG(args.berg_dir)
 
 
 # =============================================================================
@@ -114,36 +114,28 @@ for s in tqdm(args.all_subjects, leave=False):
 
 		# Load the in silico fMRI responses metadata
 		if r in ['FFA']:
-			metadata_1 = nest_object.get_metadata(
-				modality='fmri',
-				train_dataset='nsd',
-				model='fwrf',
+			metadata_1 = berg_object.get_model_metadata(
+				model_id='fmri-nsd-fwrf',
 				subject=s,
-				roi=r+'-1'
+				roi=r
 				)
-			metadata_2 = nest_object.get_metadata(
-				modality='fmri',
-				train_dataset='nsd',
-				model='fwrf',
+			metadata_2 = berg_object.get_model_metadata(
+				model_id='fmri-nsd-fwrf',
 				subject=s,
-				roi=r+'-2'
+				roi=r
 				)
 		else:
-			metadata = nest_object.get_metadata(
-				modality='fmri',
-				train_dataset='nsd',
-				model='fwrf',
+			metadata = berg_object.get_model_metadata(
+				model_id='fmri-nsd-fwrf',
 				subject=s,
 				roi=r
 				)
 
 		# Select the in silico fMRI test responses
 		if r in ['FFA']:
-			test_img_num = metadata_1['encoding_models']\
-				['train_val_test_nsd_image_splits']['test_img_num']
+			test_img_num = metadata_1['encoding_models']['test_img_num']
 		else:
-			test_img_num = metadata['encoding_models']\
-				['train_val_test_nsd_image_splits']['test_img_num']
+			test_img_num = metadata['encoding_models']['test_img_num']
 		insilico_fmri = insilico_fmri[test_img_num]
 
 
@@ -151,13 +143,13 @@ for s in tqdm(args.all_subjects, leave=False):
 # Load the ground truth test data
 # =============================================================================
 		# The ground truth fMRI data was prepared using this code:
-		# https://github.com/gifale95/NEST/blob/main/nest_creation_code/00_prepare_data/train_dataset-nsd/model-fwrf/prepare_nsd_fmri.py
+		# https://github.com/gifale95/BERG/blob/main/berg_creation_code/00_prepare_data/train_dataset-nsd/model-fwrf/prepare_nsd_fmri.py
 
 		if r in ['FFA']:
-			betas_dir_1 = os.path.join(args.nest_dir, 'model_training_datasets',
+			betas_dir_1 = os.path.join(args.berg_dir, 'model_training_datasets',
 				'train_dataset-nsd', 'model-fwrf', 'neural_data',
 				'nsd_betas_sub-'+format(s,'02')+'_roi-'+r+'-1.npy')
-			betas_dir_2 = os.path.join(args.nest_dir, 'model_training_datasets',
+			betas_dir_2 = os.path.join(args.berg_dir, 'model_training_datasets',
 				'train_dataset-nsd', 'model-fwrf', 'neural_data',
 				'nsd_betas_sub-'+format(s,'02')+'_roi-'+r+'-2.npy')
 			betas_dict_1 = np.load(betas_dir_1, allow_pickle=True).item()
@@ -172,7 +164,7 @@ for s in tqdm(args.all_subjects, leave=False):
 					betas_dict_2['betas'][idx], 1)
 			del betas_dict_1, betas_dict_2
 		else:
-			betas_dir = os.path.join(args.nest_dir, 'model_training_datasets',
+			betas_dir = os.path.join(args.berg_dir, 'model_training_datasets',
 				'train_dataset-nsd', 'model-fwrf', 'neural_data',
 				'nsd_betas_sub-'+format(s,'02')+'_roi-'+r+'.npy')
 			betas_dict = np.load(betas_dir, allow_pickle=True).item()

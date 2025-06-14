@@ -67,9 +67,9 @@ imageset : str
 	Possible choices are 'nsd', 'imagenet_val', 'things'.
 project_dir : str
 	Directory of the project folder.
-nest_dir : str
-	Directory of the Neural Encoding Simulation Toolkit.
-	https://github.com/gifale95/NEST
+berg_dir : str
+	Directory of the Brain Encoding Response Generator.
+	https://github.com/gifale95/BERG
 
 """
 
@@ -107,7 +107,7 @@ parser.add_argument('--heritability', type=float, default=.25)
 parser.add_argument('--mutation_prob', type=float, default=.25)
 parser.add_argument('--imageset', type=str, default='nsd')
 parser.add_argument('--project_dir', default='../relational_neural_control/', type=str)
-parser.add_argument('--nest_dir', default='../neural_encoding_simulation_toolkit/', type=str)
+parser.add_argument('--berg_dir', default='../brain-encoding-reponse-generator/', type=str)
 args = parser.parse_args()
 
 print('>>> Generative univariate RNC <<<')
