@@ -8,7 +8,7 @@ Alessandro T. Gifford, Maya A. Jastrzębowska, Johannes J.D. Singer, Radoslaw M.
 
 ## 📄 Paper abstract
 
-Human vision is mediated by a complex interconnected network of cortical brain areas that jointly represent visual information. While these areas are increasingly understood in isolation, their representational relationships remain elusive. Here we developed relational neural control (RNC), and used it to investigate the representational relationships for univariate and multivariate fMRI responses of areas across visual cortex. Through RNC we generated and explored in silico fMRI responses for large amounts of images, discovering controlling images that align or disentangle responses across areas, thus indicating their shared or unique representational content. This revealed a typical network-level configuration of representational relationships in which shared or unique representational content varied based on cortical distance, categorical selectivity, and position within the visual hierarchy. Closing the empirical cycle, we validated the in silico discoveries on in vivo fMRI responses from independent subjects. Together, this reveals how visual areas jointly represent the world as an interconnected network.
+Human vision is mediated by a complex interconnected network of cortical brain areas that jointly represent visual information. Although these areas are increasingly understood in isolation, their representational relationships remain unclear. Here we developed relational neural control and used it to investigate the representational relationships for univariate and multivariate functional magnetic resonance imaging (fMRI) responses of areas across the visual cortex. Through relational neural control, we generated and explored in silico fMRI responses for large numbers of images, discovering controlling images that align or disentangle responses across areas, thus indicating their shared or unique representational content. This revealed a typical network-level configuration of representational relationships in which shared or unique representational content varied on the basis of cortical distance, categorical selectivity and position within the visual hierarchy. Closing the empirical cycle, we validated the in silico discoveries on in vivo fMRI responses from independent participants. Together, this reveals how visual areas jointly represent the world as an interconnected network.
 
 
 
@@ -104,12 +104,12 @@ If you experience problems with the code, please get in touch with Ale (alessand
 ## 📜 Citation
 If you use any of our data or code, please cite:
 
-> * Gifford AT, Jastrzębowska M, Singer JJD, Cichy RM. 2024. In silico discovery of representational relationships across visual cortex. _arXiv preprint_, arXiv:2411.10872. DOI: [https://doi.org/10.48550/arXiv.2411.10872][paper_doi]
+> * Gifford AT, Jastrzębowska M, Singer JJD, Cichy RM. 2025. In silico discovery of representational relationships across visual cortex. _Nature Human Behavior_. DOI: [https://doi.org/10.1038/s41562-025-02252-z][paper_doi]
 > * Gifford AT, Bersch D, Roig G, Cichy RM. 2025. The Brain Encoding Response Generator. _In preparation_. https://github.com/gifale95/BERG
 
 
 
-[paper_doi]: https://doi.org/10.48550/arXiv.2411.10872
+[paper_doi]: https://doi.org/10.1038/s41562-025-02252-z
 [rnc_website]: https://www.alegifford.com/projects/rnc/
 [nsd]: https://naturalscenesdataset.org/
 [allen]: https://www.nature.com/articles/s41593-021-00962-x
