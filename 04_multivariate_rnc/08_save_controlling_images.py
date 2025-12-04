@@ -1,5 +1,5 @@
 """Save the controlling images selected by applying multivariate RNC on the
-in-silico univariate fMRI responses averaged over all subjects (i.e., with no
+in-silico multivariate fMRI responses averaged over all subjects (i.e., with no
 subject cross-validation).
 
 This code is available at:
