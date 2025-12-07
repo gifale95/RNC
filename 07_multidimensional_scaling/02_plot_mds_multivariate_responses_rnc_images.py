@@ -9,7 +9,7 @@ Parameters
 encoding_models_train_dataset : str
 	Dataset on which the encoding models were trained. Possible options are
 	'nsd' and 'VisualIllusionRecon'.
-rois : lisr
+rois : list
 	List of used ROIs.
 imageset : str
 	Used image set. Possible choices are 'nsd', 'imagenet_val', 'things'.
