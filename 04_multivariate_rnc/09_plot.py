@@ -12,9 +12,6 @@ roi_pairs : list
 	List of used pairwise ROI combinations.
 imageset : str
 	Used image set. Possible choices are 'nsd', 'imagenet_val', 'things'.
-n_iter : int
-	Amount of iterations for creating confidence intervals bootstrapped
-	distribution.
 project_dir : str
 	Directory of the project folder.
 
