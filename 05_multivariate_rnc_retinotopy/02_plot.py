@@ -85,7 +85,7 @@ plt.xlabel(label, fontsize=fontsize)
 plt.ylabel(label, fontsize=fontsize)
 plt.title('V1', fontsize=fontsize)
 # Colorbar
-cbar = plt.colorbar(cax, shrink=0.75, ticks=[-1, 0, 1], label='Pearson\'s $r$',
+cbar = plt.colorbar(cax, shrink=0.75, ticks=[-1, 0, 1], label="Pearson\'s $r$",
 	location='left')
 # Place colorbar labels and ticks on the left
 cbar.ax.yaxis.set_ticks_position('left')
