@@ -94,7 +94,7 @@ def load_image_generator(args, device):
 		image_generator = torch_nets.load_net('deepsim-fc7')
 		# Load the generator model weights
 		# The generator trained weights can be downloaded from:
-		# https://drive.google.com/drive/folders/1sV54kv5VXvtx4om1c9kBPbdlNuurkGFi
+		# https://drive.google.com/drive/folders/1bDWEe1Awu-8HaIGzAOaglqxxgzpBBvle
 		weight_dir = os.path.join(args.project_dir, 'generative_univariate_rnc',
 			'generator_weights', 'deepsim', 'fc7.pt')
 		generator_weights = torch.load(weight_dir, map_location='cpu')
